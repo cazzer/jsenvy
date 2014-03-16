@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>JS Envy</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="jsenvy.css">
 	</head>
 	<body>
-		<form id="libraryForm">
-			<input type="text" id="libraryName">
-			<input type="submit" value="Load Library">
-		</form>
-		<script data-main="jsenv" src="require.min.js" type="text/javascript"></script>
+		<div class="jumbotron">
+			<div class="container-fluid">
+				<h1>JS Envy</h1>
+				<p>
+					For when you just want to mess around in the <tt>console</tt>.
+				</p>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="col-md-6">
+					<form id="libraryForm" role="form" class="form-horizontal">
+						<div class="form-group">
+							<label for="libraryName" class="control-label">Library Name or Source:</label>
+							<div class="input-group">
+								<input type="text" id="libraryName" class="form-control">
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-default">
+										Load Library
+									</button>
+								</div>
+
+							</div>
+							<p class="help-block">
+								Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>, or enter the full path to a library and click 'Load Library'.
+							</p>
+						</div>
+						<div class="form-group">
+							<p class="help-block">
+								To load a cdnjs library, select it from the list.
+							</p>
+							<ul id="librarySuggestions"></ul>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Loaded Libraries
+						</div>
+						<div class="panel-body">
+							<ul id="loadedLibraries"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="jsenvy.js" type="text/javascript"></script>
 	</body>
 </html>
