@@ -1,4 +1,4 @@
 jsenv
 =====
 
-Minimal Javascripting environment for testing the API from a console
+Minimal Javascripting environment for testing an API from a console
