@@ -1,7 +1,7 @@
 var jsenvy = (function() {
 	//keep track of
 	var filesLoaded = [];
-	var cdnjsLibraries = preloadCdnjs();
+	//var cdnjsLibraries = preloadCdnjs();
 
 	function get(url, callback) {
 		var xhr;
@@ -10,11 +10,12 @@ var jsenvy = (function() {
 			xhr = new XMLHttpRequest();
 		else {
 			var versions = [
-					"MSXML2.XmlHttp.5.0",
-					"MSXML2.XmlHttp.4.0",
-					"MSXML2.XmlHttp.3.0",
-					"MSXML2.XmlHttp.2.0",
-					"Microsoft.XmlHttp"];
+				"MSXML2.XmlHttp.5.0",
+				"MSXML2.XmlHttp.4.0",
+				"MSXML2.XmlHttp.3.0",
+				"MSXML2.XmlHttp.2.0",
+				"Microsoft.XmlHttp"
+			];
 					
 			for (var i = 0, len = versions.length; i < len; i++) {
 				try {
@@ -84,15 +85,6 @@ var jsenvy = (function() {
 			}
 			
 			return results;
-		},
-		getMethods: function(object) {
-			var options = [];
-			for (var things in object) {
-				if (["object", "function"].indexOf(typeof object[things]) > -1) {
-					options.push(things);
-				}
-			}
-			return options;
 		},
 		toggleHideable: function(element) {
 			if (element.nextElementSibling.getAttribute("data-hidden") != "true") {
@@ -175,7 +167,19 @@ var jsConsole = (function(id) {
 	var $console = document.getElementById(id),
 		$form = $console.getElementsByTagName('form')[0],
 		$input = $form.input,
-		$history = $console.getElementsByClassName('history')[0];
+		$history = $console.getElementsByClassName('history')[0],
+		inputHistory = [],
+		inputIterator = -1;
+	//get methods and stuff of object
+	function getMethods(object) {
+			var options = [];
+			for (var things in object) {
+				if (["object", "function"].indexOf(typeof object[things]) > -1) {
+					options.push(things);
+				}
+			}
+			return options;
+	}
 	//execute the codez
 	$form.onsubmit = function(e) {
 		e.preventDefault();
@@ -194,10 +198,27 @@ var jsConsole = (function(id) {
 		li.appendChild(input)
 		li.appendChild(output);
 		//clean up
+		inputHistory.push($input.value);
+		inputIterator = inputHistory.length;
 		$history.appendChild(li);
 		$input.value = "";
 	};
-
+	//do some intellisense
+	$input.onkeyup = function(e) {
+		switch (e.keyCode) {
+			case 38:	//"up"
+				inputIterator = inputIterator <= 0 ? 0 : --inputIterator;
+				$input.value = inputHistory[inputIterator] ? inputHistory[inputIterator] : "";
+				break;
+			case 40:	//"down"
+				inputIterator = inputIterator >= inputHistory.length ? inputHistory.length : ++inputIterator;
+				$input.value = inputHistory[inputIterator] ? inputHistory[inputIterator] : "";
+				break;
+			case 190:	//"period"
+			
+				break;
+		}
+	};
 	
 })("console");
 
