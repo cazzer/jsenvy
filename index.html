@@ -17,37 +17,71 @@
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="col-md-6">
-					<form id="libraryForm" role="form" class="form-horizontal">
-						<div class="form-group">
-							<label for="libraryName" class="control-label">Library Name or Source:</label>
-							<div class="input-group">
-								<input type="text" id="libraryName" class="form-control">
-								<div class="input-group-btn">
-									<button type="submit" class="btn btn-default">
-										Load Library
-									</button>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<form id="libraryForm" role="form" class="form-inline">
+								<div class="form-group">
+									<label for="libraryName" class="control-label">Library Name:</label>
+									<div class="input-group">
+										<input type="text" id="libraryName" class="form-control" autocomplete="off">
+										<div class="input-group-btn">
+											<button type="submit" class="btn btn-default">
+												Search
+											</button>
+										</div>
+		
+									</div>
+									<p class="help-block">
+										Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>, or enter the full path to a library and click <a href="#" id="loadFromUrl" role="button">here</a>.
+									</p>
 								</div>
-
-							</div>
-							<p class="help-block">
-								Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>, or enter the full path to a library and click 'Load Library'.
-							</p>
+									
+							</form>		
 						</div>
-						<div class="form-group">
-							<p class="help-block">
-								To load a cdnjs library, select it from the list.
+						<div class="panel-body">
+							<p id="suggestions-help" class="help-block">
 							</p>
 							<ul id="librarySuggestions"></ul>
 						</div>
-					</form>
+					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="panel panel-default">
-						<div class="panel-heading">
+						<div class="panel-heading hideable">
 							Loaded Libraries
 						</div>
 						<div class="panel-body">
 							<ul id="loadedLibraries"></ul>
+						</div>
+					</div>
+					<!-- I'll implement this later
+					<div class="panel panel-default">
+						<div class="panel-heading hideable">
+							Configuration Space
+						</div>
+						<div class="panel-body">
+							<form id="configuration">
+								<textarea name="configurationContent" class="form-control"></textarea>
+							</form>
+						</div>
+						<div class="panel-footer">
+							<button type="submit" class="btn btn-default form-control" for="configuration">
+								Set Configuration
+							</button>
+						</div>
+					</div>
+					-->
+					<div id="console" class="panel panel-default">
+						<div class="panel-heading hideable">
+							Console
+						</div>
+						<div class="panel-body">
+							<ol class="history"></ol>
+						</div>
+						<div class="panel-footer">
+							<form>
+								<input type="text" class="form-control" name="input">
+							</form>
 						</div>
 					</div>
 				</div>

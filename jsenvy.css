@@ -1,3 +1,8 @@
+textarea {
+	max-width: 100%;
+	min-width: 100%;
+}
+
 ul {
 	list-style: none outside none;
 	padding-left: 0;
@@ -18,4 +23,24 @@ ul li {
 
 #librarySuggestions li:hover {
 	background-color: #f5f5f5;
+}
+
+.hidden {
+	display: none;
+}
+
+.hideable {
+	cursor: pointer;
+}
+
+#console ol {
+	font-family: courier;
+}
+
+#console ol .input {
+	color: #b6b6b6;
+}
+
+#console ol .output {
+	
 }
