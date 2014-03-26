@@ -1,7 +1,7 @@
 var jsenvy = (function() {
 	//keep track of
 	var filesLoaded = [];
-	//var cdnjsLibraries = preloadCdnjs();
+	var cdnjsLibraries = preloadCdnjs();
 
 	function get(url, callback) {
 		var xhr;
@@ -165,6 +165,7 @@ var jsenvyUi = (function() {
 var jsConsole = (function(id) {
 	//cache the money
 	var $console = document.getElementById(id),
+		$toolTip = $console.getElementsByClassName('tool-tip')[0];
 		$form = $console.getElementsByTagName('form')[0],
 		$input = $form.input,
 		$history = $console.getElementsByClassName('history')[0],
@@ -180,6 +181,79 @@ var jsConsole = (function(id) {
 			}
 			return options;
 	}
+	//tooltip
+	function showToolTip(tips) {
+		if (!tips.length) return;
+		//load tips into tool
+		$toolTip.innerHTML = "";
+		for (var i = 0; i < tips.length; i++) {
+			var li = document.createElement("option");
+			li.innerHTML = tips[i];
+			$toolTip.appendChild(li);
+		}
+		//display tool
+		var x = caretPosition($input);
+		$toolTip.style.left = (x * parseInt(getDefaultComputedStyle($toolTip).fontSize)) + "px";
+		$toolTip.style.bottom = 0;
+		$toolTip.style.display = "block";
+	}
+	//filter
+	function filterToolTip() {
+		if ($toolTip.style.display == "none") return;
+		
+		var filter = $input.value.split(".")[$input.value.split(".").length - 1],
+			tips = $toolTip.getElementsByTagName('option');
+		for (var i = 0; i < tips.length; i++) {
+			if (tips[i].innerHTML.indexOf(filter) < 0) {
+				$toolTip.removeChild(tips[i]);
+			}
+		}
+	}
+	//hide
+	function hideToolTip() {
+		$toolTip.style.display = "none";
+	}
+	/*
+	 ** Returns the caret (cursor) position of the specified text field.
+	 ** Return value range is 0-oField.value.length.
+	 */
+	function caretPosition(oField) {
+
+		// Initialize
+		var iCaretPos = 0;
+
+		// IE Support
+		if (document.selection) {
+
+			// Set focus on the element
+			oField.focus();
+
+			// To get cursor position, get empty selection range
+			var oSel = document.selection.createRange();
+
+			// Move selection start to 0 position
+			oSel.moveStart('character', -oField.value.length);
+
+			// The caret position is selection length
+			iCaretPos = oSel.text.length;
+		}
+
+		// Firefox support
+		else if (oField.selectionStart || oField.selectionStart == '0')
+			iCaretPos = oField.selectionStart;
+
+		// Return results
+		return (iCaretPos);
+	}
+	//add to input
+	function addToInput(string) {
+		$input.value = $input.value.slice(0, $input.value.lastIndexOf(".")) + "." + string;
+		//close tooptip and refocus on input
+		hideToolTip();
+		$input.focus();		
+	}
+	//add clear function
+	$console.clear
 	//execute the codez
 	$form.onsubmit = function(e) {
 		e.preventDefault();
@@ -205,6 +279,11 @@ var jsConsole = (function(id) {
 	};
 	//do some intellisense
 	$input.onkeyup = function(e) {
+		if ($toolTip.style.display != "none" && (e.keyCode == 38 || e.keyCode == 40)) {
+			$toolTip.focus();
+			return;
+		}
+		filterToolTip();
 		switch (e.keyCode) {
 			case 38:	//"up"
 				inputIterator = inputIterator <= 0 ? 0 : --inputIterator;
@@ -215,10 +294,24 @@ var jsConsole = (function(id) {
 				$input.value = inputHistory[inputIterator] ? inputHistory[inputIterator] : "";
 				break;
 			case 190:	//"period"
-			
+				var objectName = eval($input.value.slice(0, -1));
+				showToolTip(getMethods(objectName));
 				break;
 		}
 	};
+	//handle tooltip stuff
+	$toolTip.onkeyup = function(e) {
+		if (e.keyCode != 13) return;
+		addToInput(this.value);
+	};
+	$toolTip.onclick = function(e) {
+		addToInput(e.target.innerHTML);
+	};
 	
+	var jsConsole = {};
+	
+	jsConsole.console = $console;
+	
+	return jsConsole;
 })("console");
 
