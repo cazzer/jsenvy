@@ -1,0 +1,36 @@
+textarea {
+	max-width: 100%;
+	min-width: 100%;
+}
+
+ul {
+	list-style: none outside none;
+	padding-left: 0;
+}
+
+ul li {
+	background-color: #e6e6e6;
+	border-radius: 4px;
+	font-size: 1.2em;
+	margin: 0;
+	margin-bottom: 6px;
+	padding: 8px 20px;
+}
+
+#librarySuggestions li {
+	cursor: pointer;
+}
+
+#librarySuggestions #librarySuggestions li:hover {
+	background-color: #f5f5f5;
+}
+
+.hideable {
+	cursor: pointer;
+}
+
+.console {
+	font-family: monospace, monospace;
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	color: #46a546;
+}
