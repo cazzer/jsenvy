@@ -6,7 +6,7 @@ var gulp = require("gulp"),
 var distDir = "dist/",
 	htmlFiles = "src/index.html",
 	jsFiles = "src/jsenvy.js",
-	sassFiles = "src/jsenvy.sass";
+	sassFiles = "src/jsenvy.scss";
 
 var vendorFiles = [
 	"bower_components/bootstrap/dist/css/bootstrap.min.css",

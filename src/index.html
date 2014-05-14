@@ -1,94 +1,65 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>JS Envy</title>
-		<link rel="stylesheet" href="vendor/bootstrap.min.css">
-		<link rel="stylesheet" href="jsenvy.scss">
-	</head>
-	<body>
-		<div class="jumbotron">
-			<div class="container-fluid">
-				<h1>JS Envy</h1>
-				<p>
-					For when you just want to mess around in the <pre>console</pre>.
-				</p>
-			</div>
-		</div>
-		<div class="container-fluid">
-			<div class="row-fluid">
-				<div class="col-md-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<form id="libraryForm" role="form" class="form-inline">
-								<div class="form-group">
-									<label for="libraryName" class="control-label">Library Name:</label>
-									<div class="input-group">
-										<input type="text" id="libraryName" class="form-control" autocomplete="off">
-										<div class="input-group-btn">
-											<button type="submit" class="btn btn-default">
-												Search
-											</button>
-										</div>
-		
-									</div>
-									<p class="help-block">
-										Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>, or enter the full path to a library and click <a href="#" id="loadFromUrl" role="button">here</a>.
-									</p>
+<head>
+	<title>JS Envy</title>
+	<link rel="stylesheet" href="vendor/bootstrap.min.css">
+	<link rel="stylesheet" href="jsenvy.css">
+</head>
+<body>
+<div class="jumbotron">
+	<div class="container-fluid">
+		<h1>JS Envy</h1>
+
+		<p>
+			For when you just want to mess around in the <span class="console">console</span>.
+		</p>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<form id="libraryForm" role="form" class="form-inline">
+						<div class="form-group">
+							<label for="libraryName" class="control-label">Library Name:</label>
+
+							<div class="input-group">
+								<input type="text" id="libraryName" class="form-control" autocomplete="off">
+
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-default">
+										Search
+									</button>
 								</div>
-									
-							</form>		
-						</div>
-						<div class="panel-body">
-							<p id="suggestions-help" class="help-block">
+							</div>
+							<p class="help-block">
+								Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
+								or enter the full path to a library and click <a href="#" id="loadFromUrl"
+																				 role="button">here</a>.
 							</p>
-							<ul id="librarySuggestions"></ul>
 						</div>
-					</div>
+					</form>
 				</div>
-				<div class="col-md-6">
-					<div class="panel panel-default">
-						<div class="panel-heading hideable">
-							Loaded Libraries
-						</div>
-						<div class="panel-body">
-							<ul id="loadedLibraries"></ul>
-						</div>
-					</div>
-					<!-- I'll implement this later
-					<div class="panel panel-default">
-						<div class="panel-heading hideable">
-							Configuration Space
-						</div>
-						<div class="panel-body">
-							<form id="configuration">
-								<textarea name="configurationContent" class="form-control"></textarea>
-							</form>
-						</div>
-						<div class="panel-footer">
-							<button type="submit" class="btn btn-default form-control" for="configuration">
-								Set Configuration
-							</button>
-						</div>
-					</div>
-					-->
-					<div id="console" class="panel panel-default">
-						<div class="panel-heading hideable">
-							Console
-						</div>
-						<div class="panel-body">
-							<ol class="history"></ol>
-						</div>
-						<div class="panel-footer">
-							<form>
-								<input type="text" class="form-control" name="input" autocomplete="off">
-								<select name="tips" class="tool-tip" size="8">
-								</select>
-							</form>
-						</div>
-					</div>
+				<div class="panel-body">
+					<p id="suggestions-help" class="help-block">
+					</p>
+					<ul id="librarySuggestions"></ul>
 				</div>
 			</div>
 		</div>
-		<script src="jsenvy.js" type="text/javascript"></script>
-	</body>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading hideable">
+					Loaded Libraries
+				</div>
+				<div class="panel-body">
+					<ul id="loadedLibraries"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="jsenvy.js" type="text/javascript"></script>
+</body>
 </html>
