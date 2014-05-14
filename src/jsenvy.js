@@ -6,7 +6,13 @@
 
 	//preload cdnjs libraries
 	get("http://api.cdnjs.com/libraries", function (data) {
-		cdnjsLibraries = JSON.parse(data.response).results;
+		var results = JSON.parse(data.response).results;
+		//sort these once here
+		results.sort(function (a, b) {
+			return a.name.length - b.name.length;
+		});
+
+		cdnjsLibraries = results;
 	});
 
 	//enable hideables
