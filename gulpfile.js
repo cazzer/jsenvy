@@ -6,7 +6,7 @@ var gulp = require("gulp"),
 	run = require("run-sequence");
 
 var distDir = "dist/",
-	htmlFiles = "src/index.html",
+	htmlFiles = ["src/index.html", "src/favicon.ico"],
 	jsFiles = "src/jsenvy.js",
 	sassFiles = "src/jsenvy.scss";
 
