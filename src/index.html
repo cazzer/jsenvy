@@ -20,25 +20,16 @@
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<form id="libraryForm" role="form" class="form-inline">
+					<form id="libraryForm" role="form">
 						<div class="form-group">
 							<label for="libraryName" class="control-label">Library Name:</label>
-
-							<div class="input-group">
-								<input type="text" id="libraryName" class="form-control" autocomplete="off">
-
-								<div class="input-group-btn">
-									<button type="submit" class="btn btn-default">
-										Search
-									</button>
-								</div>
-							</div>
-							<p class="help-block">
-								Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
-								or enter the full path to a library and click <a href="#" id="loadFromUrl"
-																				 role="button">here</a>.
-							</p>
+							<input type="text" id="libraryName" class="form-control" autocomplete="off">
 						</div>
+						<p class="help-block">
+							Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
+							or enter the <strong>full path</strong> to a library and click <a href="#" id="loadFromUrl"
+																							  role="button">here</a>.
+						</p>
 					</form>
 				</div>
 				<div class="panel-body">
