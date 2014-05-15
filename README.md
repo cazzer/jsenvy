@@ -2,6 +2,7 @@ jsenv
 =====
 
 **In one sentence:** Minimal JavaScripting environment for when you just want to mess around in the console.
+
 **Don't believe me?** Check out the live demo at [jsenvy.com](http://jsenvy.com).
 
 ## What it does
@@ -21,4 +22,5 @@ The CDNJS library is loaded along with the page so you can query it quickly. Whe
 
 ## Technologies used
 - [Bootstrap](http://getbootstrap.com/) - for the fresh looking interface
+
 And that's it. I didn't want to use any other JavaScript libraries to avoid conflicts so I've also avoided adding anything of mine to the global scope.
