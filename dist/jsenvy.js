@@ -1,71 +1,190 @@
-!function () {
-	function e(e, t) {
-		function n() {
-			i.readyState < 4 || 200 === i.status && 4 === i.readyState && t(i)
-		}
+(function () {
+	//keep track of
+	var filesLoaded = [],
+		cdnjsLibraries,
+		libraryInput = document.getElementById("libraryName"),
+		suggestionsError = document.getElementById("suggestions-error"),
+		suggestionsHelp = document.getElementById("suggestions-help");
 
-		var i;
-		if ("undefined" != typeof XMLHttpRequest)i = new XMLHttpRequest; else for (var r = ["MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp"], a = 0, l = r.length; l > a; a++)try {
-			i = new ActiveXObject(r[a]);
-			break
-		} catch (o) {
-		}
-		return i.onreadystatechange = n, i.open("GET", e, !0), i.send(""), i
-	}
+	//preload cdnjs libraries
+	get("http://api.cdnjs.com/libraries", function (data) {
+		var results = JSON.parse(data.response).results;
+		//sort these once here
+		results.sort(function (a, b) {
+			return a.name.length - b.name.length;
+		});
 
-	function t(e) {
-		function t(t, n) {
-			if (t) {
-				document.getElementById("libraryName").value = "", document.getElementById("librarySuggestions").innerHTML = "";
-				var i = document.createElement("li");
-				i.innerHTML = e, document.getElementById("loadedLibraries").appendChild(i)
-			} else alert(n)
-		}
-
-		if (e) {
-			if (a.indexOf(e) >= 0)return t(!1, "We already got this for you.");
-			var n = document.createElement("script"), i = setTimeout(function () {
-				t.done || n.remove(), t(!1, "This little guy didn't make it on time: " + e)
-			}, 2e3);
-			document.body.appendChild(n), n.src = e, n.asynch = !0, n.onreadystatechange = n.onload = function () {
-				var r = n.readyState;
-				t.done || r && !/loaded|complete/.test(r) || (a.push(e), t.done = !0, clearTimeout(i), t(!0))
-			}
-		}
-	}
-
-	function n(e) {
-		for (var t = [], n = 0; n < r.length; n++)r[n].name.indexOf(e) > -1 && t.push(r[n]);
-		return t
-	}
-
-	function i(e) {
-		"true" != e.nextElementSibling.getAttribute("data-hidden") ? (e.nextElementSibling.classList.add("hidden"), e.nextElementSibling.setAttribute("data-hidden", "true")) : (e.nextElementSibling.classList.remove("hidden"), e.nextElementSibling.setAttribute("data-hidden", "false"))
-	}
-
-	var r, a = [], l = document.getElementById("libraryName");
-	e("http://api.cdnjs.com/libraries", function (e) {
-		var t = JSON.parse(e.response).results;
-		t.sort(function (e, t) {
-			return e.name.length - t.name.length
-		}), r = t
+		cdnjsLibraries = results;
 	});
-	for (var o = document.getElementsByClassName("hideable"), d = 0; d < o.length; d++)o[d].onclick = function () {
-		i(this)
-	};
+
+	//enable hideables
+	var hideables = document.getElementsByClassName("hideable");
+	for (var i = 0; i < hideables.length; i++) {
+		hideables[i].onclick = function () {
+			toggleHideable(this);
+		}
+	}
+
+	/*
+	 Append functions to the DOM
+	 */
+
+	//typeahead search
 	document.getElementById("libraryName").onkeyup = function () {
-		if (document.getElementById("librarySuggestions").innerHTML = "", !(this.value.length < 1)) {
-			var e = n(this.value);
-			if (!e.length)return void(document.getElementById("suggestions-help").innerHTML = "No results, try using the full path option.");
-			document.getElementById("suggestions-help").innerHTML = "To load a cdnjs library, select it from the list.";
-			for (var i = 0; i < e.length; i++) {
-				var r = document.createElement("li");
-				r.onclick = function () {
-					t(this.getAttribute("data-src"))
-				}, r.innerHTML = e[i].name, r.setAttribute("data-src", e[i].latest), document.getElementById("librarySuggestions").appendChild(r)
+
+		//reset the results
+		document.getElementById("librarySuggestions").innerHTML = "";
+
+		//return if there is no query
+		if (this.value.length < 1) return;
+
+		//get the new stuff
+		var results = searchCdnjs(this.value);
+		//help if we didn"t find anything
+		if (!results.length) {
+			show(suggestionsError);
+			hide(suggestionsHelp);
+			return;
+		}
+		//help if we did find anything
+		show(suggestionsHelp);
+		hide(suggestionsError);
+		//add the anything
+		for (var i = 0; i < results.length; i++) {
+			var li = document.createElement("li");
+			li.onclick = function () {
+				loadScript(this.getAttribute("data-src"));
+			};
+			li.innerHTML = results[i].name;
+			li.setAttribute("data-src", results[i].latest);
+			document.getElementById("librarySuggestions").appendChild(li);
+		}
+	};
+
+	//backup file loader
+	document.getElementById("loadFromUrl").onclick = function () {
+		loadScript(libraryInput.value);
+	};
+
+	/*
+	 Utility Functions
+	 */
+
+	//our friendly neighborhood ajax http request
+	function get(url, callback) {
+		var xhr;
+
+		if (typeof XMLHttpRequest !== "undefined")
+			xhr = new XMLHttpRequest();
+		else {
+			var versions = [
+				"MSXML2.XmlHttp.5.0",
+				"MSXML2.XmlHttp.4.0",
+				"MSXML2.XmlHttp.3.0",
+				"MSXML2.XmlHttp.2.0",
+				"Microsoft.XmlHttp"
+			];
+
+			for (var i = 0, len = versions.length; i < len; i++) {
+				try {
+					xhr = new ActiveXObject(versions[i]);
+					break;
+				} catch (e) {
+				}
 			}
 		}
-	}, document.getElementById("loadFromUrl").onclick = function () {
-		t(l.value)
+		xhr.onreadystatechange = ensureReadiness;
+		function ensureReadiness() {
+			if (xhr.readyState < 4) {
+				return;
+			}
+			if (xhr.status !== 200) {
+				return;
+			}
+			if (xhr.readyState === 4) {
+				callback(xhr);
+			}
+		}
+
+		xhr.open("GET", url, true);
+		xhr.send("");
+		return xhr;
 	}
-}();
+
+	//load a script in a friendly way
+	function loadScript(file) {
+
+		if (!file) return;
+
+		function callback(success, message) {
+			if (success) {
+				document.getElementById("libraryName").value = "";
+				document.getElementById("librarySuggestions").innerHTML = "";
+				hide(suggestionsHelp);
+				hide(suggestionsError);
+
+				var li = document.createElement("li");
+				li.innerHTML = file;
+				document.getElementById("loadedLibraries").appendChild(li);
+			} else {
+				alert(message);
+			}
+		}
+
+		if (filesLoaded.indexOf(file) >= 0)
+			return callback(false, "We already got this for you.");
+
+		var script = document.createElement("script"), validator = setTimeout(function () {
+			if (!callback.done)
+				script.remove();
+			callback(false, "This little guy didn't make it on time: " + file);
+		}, 2000);
+
+		document.body.appendChild(script);
+		script.src = file;
+		script.asynch = true;
+		script.onreadystatechange = script.onload = function () {
+			var state = script.readyState;
+			if (!callback.done && (!state || /loaded|complete/.test(state))) {
+				filesLoaded.push(file);
+				//clear the dishes
+				callback.done = true;
+				clearTimeout(validator);
+				callback(true);
+			}
+		};
+	}
+
+	//search cdnjs stuff and return the results
+	function searchCdnjs(query) {
+		var results = [];
+
+		for (var i = 0; i < cdnjsLibraries.length; i++) {
+			if (cdnjsLibraries[i].name.indexOf(query) > -1) {
+				results.push(cdnjsLibraries[i]);
+			}
+		}
+
+		return results;
+	}
+
+	//open or close a hideable element
+	function toggleHideable(element) {
+		if (element.nextElementSibling.hasClass("hidden")) {
+			show(element);
+		} else {
+			hide(element);
+		}
+	}
+
+	//remove class helper
+	function hide(element) {
+		if (!element.classList.contains("hidden")) {
+			element.classList.add("hidden");
+		}
+	}
+
+	function show(element) {
+		element.classList.remove("hidden");
+	}
+})();

@@ -2,7 +2,9 @@
 	//keep track of
 	var filesLoaded = [],
 		cdnjsLibraries,
-		libraryInput = document.getElementById("libraryName");
+		libraryInput = document.getElementById("libraryName"),
+		suggestionsError = document.getElementById("suggestions-error"),
+		suggestionsHelp = document.getElementById("suggestions-help");
 
 	//preload cdnjs libraries
 	get("http://api.cdnjs.com/libraries", function (data) {
@@ -40,11 +42,13 @@
 		var results = searchCdnjs(this.value);
 		//help if we didn"t find anything
 		if (!results.length) {
-			document.getElementById("suggestions-help").innerHTML = "No results, try using the full path option.";
+			show(suggestionsError);
+			hide(suggestionsHelp);
 			return;
 		}
 		//help if we did find anything
-		document.getElementById("suggestions-help").innerHTML = "To load a cdnjs library, select it from the list.";
+		show(suggestionsHelp);
+		hide(suggestionsError);
 		//add the anything
 		for (var i = 0; i < results.length; i++) {
 			var li = document.createElement("li");
@@ -116,6 +120,8 @@
 			if (success) {
 				document.getElementById("libraryName").value = "";
 				document.getElementById("librarySuggestions").innerHTML = "";
+				hide(suggestionsHelp);
+				hide(suggestionsError);
 
 				var li = document.createElement("li");
 				li.innerHTML = file;
@@ -164,12 +170,21 @@
 
 	//open or close a hideable element
 	function toggleHideable(element) {
-		if (element.nextElementSibling.getAttribute("data-hidden") != "true") {
-			element.nextElementSibling.classList.add("hidden");
-			element.nextElementSibling.setAttribute("data-hidden", "true");
+		if (element.nextElementSibling.hasClass("hidden")) {
+			show(element);
 		} else {
-			element.nextElementSibling.classList.remove("hidden");
-			element.nextElementSibling.setAttribute("data-hidden", "false");
+			hide(element);
 		}
+	}
+
+	//remove class helper
+	function hide(element) {
+		if (!element.classList.contains("hidden")) {
+			element.classList.add("hidden");
+		}
+	}
+
+	function show(element) {
+		element.classList.remove("hidden");
 	}
 })();

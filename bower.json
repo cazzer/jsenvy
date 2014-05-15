@@ -1,0 +1,24 @@
+{
+	"name": "jsenvy",
+	"version": "0.1.0",
+	"homepage": "http://jsenvy.com",
+	"authors": [
+		"Caleb Brewer <calebthebrewer@gmail.com>"
+	],
+	"description": "JS Envy is a minimal testing environment for when you just want to mess around in the console.",
+	"main": "index.html",
+	"license": "MIT",
+	"keywords": [
+		"jsenvy",
+		"js",
+		"console",
+		"develop",
+		"library",
+		"framework",
+		"test"
+	],
+	"private": true,
+	"dependencies": {
+		"bootstrap": "~3.1.1"
+	}
+}

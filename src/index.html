@@ -13,16 +13,26 @@
 </head>
 <body>
 <div class="jumbotron">
-	<div class="container-fluid">
-		<h1>JS Envy</h1>
+	<div class="container">
+	<h1>JS Envy</h1>
 
 		<p>
 			For when you just want to mess around in the <span class="console">console</span>.
 		</p>
 	</div>
 </div>
-<div class="container-fluid">
-	<div class="row-fluid">
+<div class="container">
+	<div class="row visible-xs">
+		<div class="col-xs-12">
+			<div class="alert alert-warning">
+				<strong>Mobile, huh?</strong>
+				That's cool, but you probably won't enjoy this unless you're connected to a device with a JavaScript
+				console.
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -39,7 +49,12 @@
 					</form>
 				</div>
 				<div class="panel-body">
-					<p id="suggestions-help" class="help-block">
+					<p id="suggestions-help" class="text-info hidden">
+						To load a cdnjs library, select it from the list.
+					</p>
+
+					<p id="suggestions-error" class="text-danger hidden">
+						No results, try using the full path option.
 					</p>
 					<ul id="librarySuggestions"></ul>
 				</div>
@@ -55,6 +70,16 @@
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+<div id="footer">
+	<div class="container">
+		<p class="text-muted">JS Envy is a tool for testing JavaScript libraries and their APIs without having to
+			any effort. After a library is loaded you can use it in the console, (F12 in most browsers). If you find a
+			library and would like to experiment more I
+			suggest checking out <a href="http://jsfiddle.net/">JSFiddle</a>. If you want to see the source or suggest
+			a new feature you can find this project on <a href="https://github.com/calebthebrewer/jsenvy">github</a>.
+		</p>
 	</div>
 </div>
 <script src="jsenvy.js" type="text/javascript"></script>
