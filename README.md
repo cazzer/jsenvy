@@ -1,4 +1,4 @@
-jsenv
+jsenvy
 =====
 
 **In one sentence:** Minimal JavaScripting environment for when you just want to mess around in the console.
@@ -6,7 +6,7 @@ jsenv
 **Don't believe me?** Check out the live demo at [jsenvy.com](http://jsenvy.com).
 
 ## What it does
-JS Envy allows you to search the wonderful [CDNJS](http://cdnjs.com/) library and load any JavaScript libraries that you want to expiriment with. If you want to load a library from another location you can also enter the full URL to a hosted copy of the library.
+JS Envy allows you to load any JavaScript libraries from [CDNJS](http://cdnjs.com/) that you want to expiriment with. If you want to load a library from another location you can also enter the full URL to a hosted copy of the library.
 
 ### What it doesn't do
 There is no dependency detection so remember to add these yourselves. Yes it's annoying, but it's much less annoying than actually implementing it.
