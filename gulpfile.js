@@ -3,11 +3,12 @@ var gulp = require("gulp"),
 	sass = require("gulp-sass"),
 	newer = require("gulp-newer"),
 	gulpif = require("gulp-if"),
-	run = require("run-sequence");
+	run = require("run-sequence"),
+	connect = require("gulp-connect");
 
 var distDir = "dist/",
 	htmlFiles = ["src/index.html", "src/favicon.ico"],
-	jsFiles = "src/jsenvy.js",
+	jsFiles = "src/*.js",
 	sassFiles = "src/jsenvy.scss";
 
 var vendorFiles = [
@@ -53,4 +54,11 @@ gulp.task("vendor", function () {
 	return gulp.src(vendorFiles)
 		.pipe(newer(distDir + "vendor"))
 		.pipe(gulp.dest(distDir + "vendor"));
+});
+
+gulp.task("serve", ["watch"], function() {
+	connect.server({
+		root: "dist",
+		port: 8080
+	});
 });

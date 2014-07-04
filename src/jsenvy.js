@@ -3,8 +3,13 @@
 	var filesLoaded = [],
 		cdnjsLibraries,
 		libraryInput = document.getElementById("libraryName"),
+		librarySuggestions = document.getElementById("librarySuggestions"),
 		suggestionsError = document.getElementById("suggestions-error"),
-		suggestionsHelp = document.getElementById("suggestions-help");
+		suggestionsHelp = document.getElementById("suggestions-help"),
+		windowChanges = document.getElementById("windowChanges"),
+		newProperties = document.getElementById("newProperties"),
+		newMethods = document.getElementById("newMethods"),
+		windowCreep = ScopeCreep(window);
 
 	//preload cdnjs libraries
 	get("http://api.cdnjs.com/libraries", function (data) {
@@ -25,15 +30,48 @@
 		}
 	}
 
+	//display updates to scope
+	function scopeUpdateViewer() {
+		var update = windowCreep.update(),
+			boom = false;
+
+			windowChanges.style.display = "none";
+			newProperties.innerHTML = "";
+			newMethods.innerHTML = "";
+
+		for (var i = 0; i < update.properties.length; i++) {
+			boom = true;
+			var li = document.createElement("li");
+			li.innerHTML = update.properties[i];
+			newProperties.appendChild(li);
+		}
+
+		for (var i = 0; i < update.methods.length; i++) {
+			boom = true;
+			var li = document.createElement("li");
+			li.innerHTML = update.methods[i];
+			newMethods.appendChild(li);
+		}
+
+		if (boom) windowChanges.style.display = "block";
+	}
+
 	/*
 	 Append functions to the DOM
 	 */
 
+	//just load the first damn result
+	document.getElementById("libraryForm").onsubmit = function(e) {
+		e.preventDefault();
+
+		librarySuggestions.firstChild.click();
+	};
+
 	//typeahead search
-	document.getElementById("libraryName").onkeyup = function () {
+	libraryInput.onkeyup = function () {
 
 		//reset the results
-		document.getElementById("librarySuggestions").innerHTML = "";
+		librarySuggestions.innerHTML = "";
 
 		//return if there is no query
 		if (this.value.length < 1) return;
@@ -53,7 +91,8 @@
 		for (var i = 0; i < results.length; i++) {
 			var li = document.createElement("li");
 			li.onclick = function () {
-				loadScript(this.getAttribute("data-src"));
+				windowCreep.update();
+				loadScript(this.getAttribute("data-src"), scopeUpdateViewer);
 			};
 			li.innerHTML = results[i].name;
 			li.setAttribute("data-src", results[i].latest);
@@ -63,7 +102,8 @@
 
 	//backup file loader
 	document.getElementById("loadFromUrl").onclick = function () {
-		loadScript(libraryInput.value);
+		windowCreep.update();
+		loadScript(libraryInput.value, scopeUpdateViewer);
 	};
 
 	/*
@@ -112,7 +152,7 @@
 	}
 
 	//load a script in a friendly way
-	function loadScript(file) {
+	function loadScript(file, userCallback) {
 
 		if (!file) return;
 
@@ -126,6 +166,9 @@
 				var li = document.createElement("li");
 				li.innerHTML = file;
 				document.getElementById("loadedLibraries").appendChild(li);
+				if (typeof userCallback === "function") {
+					userCallback();
+				}
 			} else {
 				alert(message);
 			}
