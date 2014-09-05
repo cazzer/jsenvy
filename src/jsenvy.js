@@ -92,6 +92,10 @@
 			var li = document.createElement("li");
 			li.onclick = function () {
 				windowCreep.update();
+				//analytics
+				if(ga !== undefined) {
+					ga('send', 'event', 'loadcdnjs', this.innerHTML);
+				}
 				loadScript(this.getAttribute("data-src"), scopeUpdateViewer);
 			};
 			li.innerHTML = results[i].name;
@@ -103,6 +107,10 @@
 	//backup file loader
 	document.getElementById("loadFromUrl").onclick = function () {
 		windowCreep.update();
+		//analytics
+		if(ga !== undefined) {
+			ga('send', 'event', 'loadurl', libraryInput.value);
+		}
 		loadScript(libraryInput.value, scopeUpdateViewer);
 	};
 
@@ -112,6 +120,7 @@
 
 	//our friendly neighborhood ajax http request
 	function get(url, callback) {
+
 		var xhr;
 
 		if (typeof XMLHttpRequest !== "undefined")
