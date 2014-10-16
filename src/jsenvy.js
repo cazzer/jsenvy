@@ -219,7 +219,7 @@
 
 	//open or close a hideable element
 	function toggleHideable(element) {
-		if (element.nextElementSibling.hasClass("hidden")) {
+		if (element.nextElementSibling.classList.contains("hidden")) {
 			show(element);
 		} else {
 			hide(element);

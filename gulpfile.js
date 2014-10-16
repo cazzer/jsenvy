@@ -9,7 +9,7 @@ var gulp = require("gulp"),
 var distDir = "dist/",
 	htmlFiles = ["src/index.html", "src/favicon.ico"],
 	jsFiles = "src/*.js",
-	sassFiles = "src/jsenvy.scss";
+	sassFiles = "src/*.scss";
 
 var vendorFiles = [
 	"bower_components/bootstrap/dist/css/bootstrap.min.css",

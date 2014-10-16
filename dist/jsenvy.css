@@ -18,8 +18,8 @@ ul {
 
 #librarySuggestions li {
   cursor: pointer; }
-#librarySuggestions #librarySuggestions li:hover {
-  background-color: #f5f5f5; }
+  #librarySuggestions li:hover {
+    background-color: #f5f5f5; }
 
 #windowChanges {
   display: none; }
