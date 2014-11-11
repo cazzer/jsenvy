@@ -4,7 +4,9 @@ var gulp = require("gulp"),
 	newer = require("gulp-newer"),
 	gulpif = require("gulp-if"),
 	run = require("run-sequence"),
-	connect = require("gulp-connect");
+	connect = require("gulp-connect"),
+	selectors = require("gulp-selectors"),
+	es = require("event-stream");
 
 var distDir = "dist/",
 	htmlFiles = ["src/index.html", "src/favicon.ico"],
@@ -12,45 +14,51 @@ var distDir = "dist/",
 	sassFiles = "src/*.scss";
 
 var vendorFiles = [
-	"bower_components/bootstrap/dist/css/bootstrap.min.css",
-	"bower_components/bootstrap/dist/fonts/*"
-];
+		"bower_components/bootstrap/dist/fonts/*"
+	],
+	vendorStyles = [
+		"bower_components/bootstrap/dist/css/bootstrap.min.css"
+	];
 
 var isProd = false;
 
 gulp.task("default", ["watch"]);
 
-gulp.task("watch", ["build"], function () {
-	gulp.watch(htmlFiles, ["html"]);
-	gulp.watch(jsFiles, ["js"]);
-	gulp.watch(sassFiles, ["sass"]);
+gulp.task("watch", ["build"], function() {
+	gulp.watch(htmlFiles, ["build"]);
+	gulp.watch(jsFiles, ["build"]);
+	gulp.watch(sassFiles, ["build"]);
 });
 
-gulp.task("build", ["html", "js", "sass", "vendor"]);
+gulp.task("build", ["vendor"], function() {
+	es
+		.merge(views(), logic(), styles(), vendor())
+		.pipe(selectors.run({
+			css: ["scss", "css"],
+			html: ["html"]
+		}, {
+			classes: ["hidden", "hideable"],
+			ids: [
+				"libraryName",
+				"loadFromUrl",
+				"librarySuggestions",
+				"suggestions-error",
+				"suggestions-help",
+				"windowChanges",
+				"newProperties",
+				"newMethods",
+				"libraryForm"
+			]
+		}))
+		.pipe(gulp.dest(distDir));
+});
 
-gulp.task("build-prod", function (callback) {
+gulp.task("build-prod", function(callback) {
 	isProd = true;
 	run("build", callback);
 });
 
-gulp.task("html", function () {
-	return gulp.src(htmlFiles)
-		.pipe(gulp.dest(distDir));
-});
-
-gulp.task("js", function () {
-	return gulp.src(jsFiles)
-		.pipe(gulpif(isProd, uglify()))
-		.pipe(gulp.dest(distDir));
-});
-
-gulp.task("sass", function () {
-	return gulp.src(sassFiles)
-		.pipe(sass())
-		.pipe(gulp.dest(distDir));
-});
-
-gulp.task("vendor", function () {
+gulp.task("vendor", function() {
 	return gulp.src(vendorFiles)
 		.pipe(newer(distDir + "vendor"))
 		.pipe(gulp.dest(distDir + "vendor"));
@@ -62,3 +70,21 @@ gulp.task("serve", ["watch"], function() {
 		port: 8080
 	});
 });
+
+function views() {
+	return gulp.src(htmlFiles);
+}
+
+function logic() {
+	return gulp.src(jsFiles)
+		.pipe(gulpif(isProd, uglify()));
+}
+
+function styles() {
+	return gulp.src(sassFiles)
+		.pipe(sass());
+}
+
+function vendor() {
+	return gulp.src(vendorStyles);
+}
