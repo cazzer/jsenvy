@@ -6,6 +6,7 @@ var gulp = require("gulp"),
 	run = require("run-sequence"),
 	connect = require("gulp-connect"),
 	selectors = require("gulp-selectors"),
+	minifyCss = require("gulp-minify-css"),
 	es = require("event-stream");
 
 var distDir = "dist/",
@@ -38,17 +39,7 @@ gulp.task("build", ["vendor"], function() {
 			html: ["html"]
 		}, {
 			classes: ["hidden", "hideable"],
-			ids: [
-				"libraryName",
-				"loadFromUrl",
-				"librarySuggestions",
-				"suggestions-error",
-				"suggestions-help",
-				"windowChanges",
-				"newProperties",
-				"newMethods",
-				"libraryForm"
-			]
+			ids: true
 		}))
 		.pipe(gulp.dest(distDir));
 });
@@ -82,9 +73,13 @@ function logic() {
 
 function styles() {
 	return gulp.src(sassFiles)
-		.pipe(sass());
+		.pipe(sass())
+		.pipe(gulpif(isProd, minifyCss()));
 }
 
 function vendor() {
-	return gulp.src(vendorStyles);
+	return gulp.src(vendorStyles)
+		.pipe(minifyCss({
+			keepSpecialComments: 0
+		}));
 }
