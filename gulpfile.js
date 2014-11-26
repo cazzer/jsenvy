@@ -36,7 +36,8 @@ gulp.task("build", ["vendor"], function() {
 		.merge(views(), logic(), styles(), vendor())
 		.pipe(selectors.run({
 			css: ["scss", "css"],
-			html: ["html"]
+			html: ["html"],
+			'remove-unused': ["css"]
 		}, {
 			classes: ["hidden", "hideable"],
 			ids: true
