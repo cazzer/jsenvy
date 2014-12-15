@@ -158,8 +158,8 @@
 		if (!file) return;
 
 		//analytics
-		if(ga !== undefined) {
-			ga('send', 'event', 'load', file);
+		if(window.ga !== undefined) {
+			window.ga('send', 'event', 'load', file);
 		}
 
 		function callback(success, message) {

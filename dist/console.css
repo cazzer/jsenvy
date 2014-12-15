@@ -1,0 +1,5 @@
+#console .r, #console .s {
+  overflow: hidden;
+  text-overflow: ellipsis; }
+  #console .r::before, #console .s::before {
+    content: "!"; }

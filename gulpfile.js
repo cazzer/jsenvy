@@ -7,11 +7,12 @@ var gulp = require("gulp"),
 	connect = require("gulp-connect"),
 	selectors = require("gulp-selectors"),
 	minifyCss = require("gulp-minify-css"),
-	es = require("event-stream");
+	es = require("event-stream"),
+	concat = require("gulp-concat");
 
 var distDir = "dist/",
 	htmlFiles = ["src/index.html", "src/favicon.ico"],
-	jsFiles = "src/*.js",
+	jsFiles = ["src/console.js", "src/scope-creep.js", "src/jsenvy.js"],
 	sassFiles = "src/*.scss";
 
 var vendorFiles = [
@@ -36,8 +37,7 @@ gulp.task("build", ["vendor"], function() {
 		.merge(views(), logic(), styles(), vendor())
 		.pipe(selectors.run({
 			css: ["scss", "css"],
-			html: ["html"],
-			'remove-unused': ["css"]
+			html: ["html"]
 		}, {
 			classes: ["hidden", "hideable"],
 			ids: true
@@ -47,6 +47,7 @@ gulp.task("build", ["vendor"], function() {
 
 gulp.task("build-prod", function(callback) {
 	isProd = true;
+	jsFiles.push("src/ga.js");
 	run("build", callback);
 });
 
@@ -69,13 +70,15 @@ function views() {
 
 function logic() {
 	return gulp.src(jsFiles)
-		.pipe(gulpif(isProd, uglify()));
+		.pipe(gulpif(isProd, uglify()))
+		.pipe(concat("app.js"));
 }
 
 function styles() {
 	return gulp.src(sassFiles)
 		.pipe(sass())
-		.pipe(gulpif(isProd, minifyCss()));
+		.pipe(gulpif(isProd, minifyCss()))
+		.pipe(concat("styles.css"));
 }
 
 function vendor() {

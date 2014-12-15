@@ -1,0 +1,14 @@
+#console {
+	.log,
+	.error {
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&::before {
+			content: ">> " attr(title);
+			display: block;
+			font-style: italic;
+			color: gray;
+		}
+	}
+}
