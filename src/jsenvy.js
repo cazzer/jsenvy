@@ -2,6 +2,7 @@
 	//keep track of
 	var filesLoaded = [],
 		cdnjsLibraries,
+		cdnjsLibBase = "http://cdnjs.cloudflare.com/ajax/libs",
 		libraryInput = document.getElementById("libraryName"),
 		librarySuggestions = document.getElementById("librarySuggestions"),
 		suggestionsError = document.getElementById("suggestions-error"),
@@ -20,6 +21,9 @@
 		});
 
 		cdnjsLibraries = results;
+		if (window.location.hash) {
+			loadLibrariesFromHash(window.location.hash);
+		}
 	});
 
 	//enable hideables
@@ -153,7 +157,7 @@
 	}
 
 	//load a script in a friendly way
-	function loadScript(file, userCallback) {
+	function loadScript(file, userCallback, skipPersist) {
 
 		if (!file) return;
 
@@ -196,6 +200,9 @@
 			var state = script.readyState;
 			if (!callback.done && (!state || /loaded|complete/.test(state))) {
 				filesLoaded.push(file);
+				if (!skipPersist) {
+					persistLibrariesToHash();
+				}
 				//clear the dishes
 				callback.done = true;
 				clearTimeout(validator);
@@ -235,5 +242,29 @@
 
 	function show(element) {
 		element.classList.remove("hidden");
+	}
+
+	function persistLibrariesToHash() {
+		var hash = [];
+		for (var i = 0; i < filesLoaded.length; i++) {
+			var fileName = filesLoaded[i].replace(cdnjsLibBase, "!");
+			hash.push(encodeURIComponent(fileName));
+		}
+		hash = hash.join(",");
+		if (window.history.replaceState) {
+			window.history.replaceState(null, null, "#" + hash);
+		} else {
+			window.location.hash = hash;
+		}
+	}
+
+	function loadLibrariesFromHash(hash) {
+		hash = hash.replace("#", "");
+		var filesToLoad = hash.split(",");
+		for (var i = 0; i < filesToLoad.length; i++) {
+			var fileUrl = filesToLoad[i].replace("!", cdnjsLibBase);
+			loadScript(decodeURIComponent(fileUrl), scopeUpdateViewer, true);
+		}
+
 	}
 })();
