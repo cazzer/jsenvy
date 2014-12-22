@@ -10,7 +10,10 @@
 		windowChanges = document.getElementById("windowChanges"),
 		newProperties = document.getElementById("newProperties"),
 		newMethods = document.getElementById("newMethods"),
-		windowCreep = ScopeCreep(window);
+		windowCreep = ScopeCreep(window, {
+			properties: ['gaplugins', 'GoogleAnalyticsObject', 'gaGlobal'],
+			methods: ['ga']
+		});
 
 	//preload cdnjs libraries
 	get("http://api.cdnjs.com/libraries", function (data) {
@@ -38,10 +41,6 @@
 	function scopeUpdateViewer() {
 		var update = windowCreep.update(),
 			boom = false;
-
-			windowChanges.style.display = "none";
-			newProperties.innerHTML = "";
-			newMethods.innerHTML = "";
 
 		for (var i = 0; i < update.properties.length; i++) {
 			boom = true;
@@ -227,9 +226,9 @@
 	//open or close a hideable element
 	function toggleHideable(element) {
 		if (element.nextElementSibling.classList.contains("hidden")) {
-			show(element);
+			show(element.nextElementSibling);
 		} else {
-			hide(element);
+			hide(element.nextElementSibling);
 		}
 	}
 

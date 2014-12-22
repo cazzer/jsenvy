@@ -5,9 +5,11 @@
  * - Update a scope to see the scope difference
  * - View the current contents of the scope, in case you forgot what you're creeping on
  */
-var ScopeCreep = function(victim) {
+var ScopeCreep = function(victim, ignores) {
 	var properties = [],
 		methods = [];
+
+	ignores = ignores || {properties: [], methods: []};
 
 	//a setter for the scope properties and methods
 	function setScope(scope) {
@@ -53,8 +55,8 @@ var ScopeCreep = function(victim) {
 	function getScopeDiff() {
 		var newScope = enumerateScope();
 
-		var propertyDiff = arrayDiff(properties, newScope.properties),
-			methodDiff = arrayDiff(methods, newScope.methods);
+		var propertyDiff = arrayDiff(ignores.properties, arrayDiff(properties, newScope.properties)),
+			methodDiff = arrayDiff(ignores.methods, arrayDiff(methods, newScope.methods));
 
 		return {
 			properties: propertyDiff,
@@ -63,17 +65,16 @@ var ScopeCreep = function(victim) {
 		};
 	}
 
-	function arrayDiff(a1, a2)
-	{
-		var a=[], diff=[];
-		for(var i=0;i<a1.length;i++)
-			a[a1[i]]=true;
-		for(var i=0;i<a2.length;i++)
-			if(a[a2[i]]) delete a[a2[i]];
-			else a[a2[i]]=true;
-		for(var k in a)
-			diff.push(k);
-		return diff;
+	function arrayDiff(array1, array2) {
+		var difference = [];
+
+		array2.forEach(function(item) {
+			if (array1.indexOf(item) === -1) {
+				difference.push(item);
+			}
+		});
+
+		return difference;
 	}
 
 	setScope();
