@@ -6,8 +6,10 @@
 		consoleForm = document.getElementById('console-form'),
 		consoleInput = document.getElementById('console-input');
 	//our console object
-	var console = {
-		log: console
+	window.jsConsole = {
+		log: log,
+		history: history,
+		callback: callback
 	};
 	//templates
 	var templates = {
@@ -15,7 +17,8 @@
 		error: document.getElementById('error-template')
 	};
 	//random variables
-	var consoleHistoryIndex = 0;
+	var consoleHistoryIndex = 0,
+		callbacks = [];
 
 	//attach events
 	consoleForm.onsubmit = function(e) {
@@ -35,6 +38,16 @@
 				break;
 		}
 	};
+
+	function callback(fn) {
+		callbacks.push(fn);
+	}
+
+	function runCallbacks() {
+		callbacks.forEach(function (fn) {
+			fn();
+		});
+	}
 
 	function log(value) {
 		var expression = value || consoleInput.value;
@@ -59,6 +72,7 @@
 		//keep the console at the bottom
 		consoleLog.scrollTop = consoleLog.scrollHeight;
 		consoleHistoryIndex = consoleLog.childElementCount;
+		runCallbacks();
 	}
 
 	function consoleHistory(operation) {
@@ -71,6 +85,17 @@
 		} else if (consoleLog.childElementCount) {
 			consoleInput.value = consoleLog.children[consoleHistoryIndex].title;
 		}
+	}
+
+	function history() {
+		var logs = consoleLog.children,
+			statements = [];
+
+		for (var i = 0, l = logs.length; i < l; i++) {
+			statements.push(logs[i].title);
+		}
+
+		return statements;
 	}
 
 	//process templates

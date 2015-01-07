@@ -11,8 +11,9 @@ var gulp = require("gulp"),
 	concat = require("gulp-concat");
 
 var distDir = "dist/",
-	htmlFiles = ["src/index.html", "src/favicon.ico"],
-	jsFiles = ["src/console.js", "src/scope-creep.js", "src/jsenvy.js"],
+	htmlFiles = ["src/*.html", "src/favicon.ico"],
+	indexJsFiles = ["src/console.js", "src/scope-creep.js", "src/jsenvy.js"],
+	consoleJsFiles = ["src/console.js", "src/jsenvy-console.js"],
 	sassFiles = "src/*.scss";
 
 var vendorFiles = [
@@ -28,7 +29,8 @@ gulp.task("default", ["watch"]);
 
 gulp.task("watch", ["build"], function() {
 	gulp.watch(htmlFiles, ["build"]);
-	gulp.watch(jsFiles, ["build"]);
+	gulp.watch(indexJsFiles, ["build"]);
+	gulp.watch(consoleJsFiles, ["build"]);
 	gulp.watch(sassFiles, ["build"]);
 });
 
@@ -47,7 +49,8 @@ gulp.task("build", ["vendor"], function() {
 
 gulp.task("build-prod", function(callback) {
 	isProd = true;
-	jsFiles.push("src/ga.js");
+	indexJsFiles.push("src/ga.js");
+	consoleJsFiles.push("src/ga.js");
 	run("build", callback);
 });
 
@@ -69,9 +72,14 @@ function views() {
 }
 
 function logic() {
-	return gulp.src(jsFiles)
-		.pipe(gulpif(isProd, uglify()))
-		.pipe(concat("app.js"));
+	return es.merge(
+		gulp.src(indexJsFiles)
+			.pipe(gulpif(isProd, uglify()))
+			.pipe(concat("app.js")),
+		gulp.src(consoleJsFiles)
+			.pipe(gulpif(isProd, uglify()))
+			.pipe(concat("app.min.js"))
+	);
 }
 
 function styles() {

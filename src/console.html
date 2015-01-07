@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<meta content="JS Envy allows users to load JavaScript libraries for quick testing directly in the console."
+		  name="description">
+	<meta content="HTML, CSS, JS, JavaScript, library, front-end, frontend, web development" name="keywords">
+	<meta content="Caleb Brewer" name="author">
+	<title>JS Envy</title>
+	<link rel="icon" type="image/png" href="favicon.ico">
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="console" class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading hideable">
+				Console
+			</div>
+			<div class="panel-body">
+					<pre id="console-log" class="pre-scrollable">
+						<div id="log-template" class="log"></div>
+						<div id="error-template" class="error text-danger"></div>
+					</pre>
+				<form id="console-form" role="form">
+					<div class="form-group">
+						<input type="text" id="console-input" class="form-control" autocomplete="off">
+					</div>
+					<p class="help-block">
+						Prepend your statements with <code>window.</code> to make them stick.
+						Use <code>_console.</code> if you want to access the browser
+						console. You can also hit F12 and use it directly.
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="app.min.js"></script>
+</body>
+</html>
