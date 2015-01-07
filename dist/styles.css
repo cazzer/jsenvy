@@ -1,13 +1,25 @@
-#console .i, #console .h {
+#console .d, #console .c {
 	overflow: hidden;
 	text-overflow: ellipsis
 }
 
-#console .i::before, #console .h::before {
+#console .d::before, #console .c::before {
 	content: ">> " attr(title);
 	display: block;
 	font-style: italic;
 	color: gray
+}
+
+#console.a {
+	position: relative
+}
+
+#console.a .b {
+	height: 100%
+}
+
+#console.a .f {
+	width: 100%
 }
 
 textarea {
@@ -47,7 +59,7 @@ ul li {
 	cursor: pointer
 }
 
-.p {
+.i {
 	font-family: monospace, monospace;
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 	color: #46a546

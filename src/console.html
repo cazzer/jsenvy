@@ -12,30 +12,14 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div id="console" class="row">
-	<div class="col-md-12">
-		<div class="panel panel-default">
-			<div class="panel-heading hideable">
-				Console
-			</div>
-			<div class="panel-body">
-					<pre id="console-log" class="pre-scrollable">
-						<div id="log-template" class="log"></div>
-						<div id="error-template" class="error text-danger"></div>
-					</pre>
-				<form id="console-form" role="form">
-					<div class="form-group">
-						<input type="text" id="console-input" class="form-control" autocomplete="off">
-					</div>
-					<p class="help-block">
-						Prepend your statements with <code>window.</code> to make them stick.
-						Use <code>_console.</code> if you want to access the browser
-						console. You can also hit F12 and use it directly.
-					</p>
-				</form>
-			</div>
-		</div>
-	</div>
+<div id="console" class="mini">
+	<pre id="console-log" class="pre-scrollable">
+		<div id="log-template" class="log"></div>
+		<div id="error-template" class="error text-danger"></div>
+	</pre>
+	<form id="console-form" role="form">
+		<input type="text" id="console-input" class="console-input" autocomplete="off">
+	</form>
 </div>
 <script src="app.min.js"></script>
 </body>

@@ -11,4 +11,14 @@
 			color: gray;
 		}
 	}
+
+  &.mini {
+	position: relative;
+	.pre-scrollable {
+	  height: 100%;
+	}
+	.console-input {
+	  width: 100%;
+	}
+  }
 }
