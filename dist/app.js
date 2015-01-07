@@ -1,554 +1,239 @@
-(function(document, window) {
-	//keep track of this guy!
-	var _console = window.console;
-	//elements
-	var consoleLog = document.getElementById('console-log'),
-		consoleForm = document.getElementById('console-form'),
-		consoleInput = document.getElementById('console-input');
-	//our console object
-	window.jsConsole = {
-		log: log,
-		history: history,
-		callback: callback
-	};
-	//templates
-	var templates = {
-		log: document.getElementById('log-template'),
-		error: document.getElementById('error-template')
-	};
-	//random variables
-	var consoleHistoryIndex = 0,
-		callbacks = [];
-
-	//attach events
-	consoleForm.onsubmit = function(e) {
-		e.preventDefault();
-		log();
-	};
-
-	consoleInput.onkeyup = function(e) {
-		switch (e.keyCode) {
-			case 38: //"up"
-				consoleHistory(-1);
-				break;
-			case 40: //"down"
-				consoleHistory(+1);
-				break;
-			default:
-				break;
-		}
-	};
-
-	function callback(fn) {
-		callbacks.push(fn);
+!function (document, window) {
+	function callback(o) {
+		callbacks.push(o)
 	}
 
 	function runCallbacks() {
-		callbacks.forEach(function (fn) {
-			fn();
-		});
+		callbacks.forEach(function (o) {
+			o()
+		})
 	}
 
 	function log(value) {
 		var expression = value || consoleInput.value;
-		if (expression === '') return;
-
-		consoleInput.value = '';
-		//here is the magic
-		try {
-			var value = eval(expression),
-				entry = templates.log.cloneNode();
-
-			entry.title = expression;
-			entry.innerHTML = value;
-			consoleLog.appendChild(entry);
-		} catch (error) {
-			var entry = templates.error.cloneNode();
-
-			entry.title = expression;
-			entry.innerHTML = error.message;
-			consoleLog.appendChild(entry);
+		if ("" !== expression) {
+			consoleInput.value = "";
+			try {
+				var value = eval(expression), entry = templates.log.cloneNode();
+				entry.title = expression, entry.innerHTML = value, consoleLog.appendChild(entry)
+			} catch (error) {
+				var entry = templates.error.cloneNode();
+				entry.title = expression, entry.innerHTML = error.message, consoleLog.appendChild(entry)
+			}
+			consoleLog.scrollTop = consoleLog.scrollHeight, consoleHistoryIndex = consoleLog.childElementCount, runCallbacks()
 		}
-		//keep the console at the bottom
-		consoleLog.scrollTop = consoleLog.scrollHeight;
-		consoleHistoryIndex = consoleLog.childElementCount;
-		runCallbacks();
 	}
 
-	function consoleHistory(operation) {
-		if (consoleHistoryIndex + operation > -1 &&
-			consoleHistoryIndex + operation <= consoleLog.childElementCount) {
-			consoleHistoryIndex = consoleHistoryIndex + operation;
-		}
-		if (consoleHistoryIndex === consoleLog.childElementCount) {
-			consoleInput.value = '';
-		} else if (consoleLog.childElementCount) {
-			consoleInput.value = consoleLog.children[consoleHistoryIndex].title;
-		}
+	function consoleHistory(o) {
+		consoleHistoryIndex + o > -1 && consoleHistoryIndex + o <= consoleLog.childElementCount && (consoleHistoryIndex += o), consoleHistoryIndex === consoleLog.childElementCount ? consoleInput.value = "" : consoleLog.childElementCount && (consoleInput.value = consoleLog.children[consoleHistoryIndex].title)
 	}
 
 	function history() {
-		var logs = consoleLog.children,
-			statements = [];
+		for (var o = consoleLog.children, e = [], n = 0, l = o.length; l > n; n++)e.push(o[n].title);
+		return e
+	}
 
-		for (var i = 0, l = logs.length; i < l; i++) {
-			statements.push(logs[i].title);
+	var _console = window.console, consoleLog = document.getElementById("console-log"), consoleForm = document.getElementById("console-form"), consoleInput = document.getElementById("console-input");
+	window.jsConsole = {log: log, history: history, callback: callback};
+	var templates = {log: document.getElementById("log-template"), error: document.getElementById("error-template")}, consoleHistoryIndex = 0, callbacks = [];
+	consoleForm.onsubmit = function (o) {
+		o.preventDefault(), log()
+	}, consoleInput.onkeyup = function (o) {
+		switch (o.keyCode) {
+			case 38:
+				consoleHistory(-1);
+				break;
+			case 40:
+				consoleHistory(1)
 		}
-
-		return statements;
-	}
-
-	//process templates
-	(function() {
-		for (var template in templates) {
-			var cloned = templates[template].cloneNode();
-			cloned.id = '';
-			templates[template].remove();
-			templates[template] = cloned;
+	}, function () {
+		for (var o in templates) {
+			var e = templates[o].cloneNode();
+			e.id = "", templates[o].remove(), templates[o] = e
 		}
-	})();
-})(document, window);
-/**
- * Scope Creep
- * ===
- * A fun way to creep on people's scope. Lets you:
- * - Update a scope to see the scope difference
- * - View the current contents of the scope, in case you forgot what you're creeping on
- */
-var ScopeCreep = function(victim, ignores) {
-	var properties = [],
-		methods = [];
+	}()
+}(document, window);
+var ScopeCreep = function (e, t) {
+	function r(e) {
+		"object" != typeof e && (e = n()), s = e.properties, u = e.methods
+	}
 
-	ignores = ignores || {properties: [], methods: []};
+	function o() {
+		var e = p();
+		return r(e.scope), e
+	}
 
-	//a setter for the scope properties and methods
-	function setScope(scope) {
-		if (typeof scope !== "object") {
-			scope = enumerateScope();
+	function n() {
+		for (var t = [], r = [], o = ["length", "__CommandLineAPI"], n = Object.getOwnPropertyNames(e), p = 0; p < n.length; p++) {
+			var i = n[p];
+			o.indexOf(i) >= 0 || ("function" == typeof window[i] ? r.push(i) : t.push(i))
 		}
-
-		properties = scope.properties;
-		methods = scope.methods;
+		return{properties: t, methods: r}
 	}
 
-	//an updater for the scope that returns the difference
-	function update() {
-		var diff = getScopeDiff();
-		setScope(diff.scope);
-		return diff;
+	function p() {
+		var e = n(), r = i(t.properties, i(s, e.properties)), o = i(t.methods, i(u, e.methods));
+		return{properties: r, methods: o, scope: e}
 	}
 
-	//the actually scope dissection
-	function enumerateScope() {
-		var properties = [],
-			methods = [],
-			thingsToIgnore = ["length", "__CommandLineAPI"];
-
-		var scope = Object.getOwnPropertyNames(victim);
-		for (var i = 0; i < scope.length; i++) {
-			var prop = scope[i];
-			if (thingsToIgnore.indexOf(prop) >= 0) continue;
-			if (typeof window[prop] === "function") {
-				methods.push(prop);
-			} else {
-				properties.push(prop);
-			}
-		}
-
-		return {
-			properties: properties,
-			methods: methods
-		};
+	function i(e, t) {
+		var r = [];
+		return t.forEach(function (t) {
+			-1 === e.indexOf(t) && r.push(t)
+		}), r
 	}
 
-	//retrieve the scope diff without setting the scope
-	function getScopeDiff() {
-		var newScope = enumerateScope();
-
-		var propertyDiff = arrayDiff(ignores.properties, arrayDiff(properties, newScope.properties)),
-			methodDiff = arrayDiff(ignores.methods, arrayDiff(methods, newScope.methods));
-
-		return {
-			properties: propertyDiff,
-			methods: methodDiff,
-			scope: newScope
-		};
-	}
-
-	function arrayDiff(array1, array2) {
-		var difference = [];
-
-		array2.forEach(function(item) {
-			if (array1.indexOf(item) === -1) {
-				difference.push(item);
-			}
-		});
-
-		return difference;
-	}
-
-	setScope();
-	return {
-		update: update,
-		peek: getScopeDiff,
-		get: enumerateScope
-	}
+	var s = [], u = [];
+	return t = t || {properties: [], methods: []}, r(), {update: o, peek: p, get: n}
 };
-(function () {
-	//keep track of
-	var filesLoaded = [],
-		cdnjsLibraries,
-		cdnjsLibBase = "http://cdnjs.cloudflare.com/ajax/libs",
-		libraryInput = document.getElementById("libraryName"),
-		librarySuggestions = document.getElementById("librarySuggestions"),
-		suggestionsError = document.getElementById("suggestions-error"),
-		suggestionsHelp = document.getElementById("suggestions-help"),
-		windowChanges = document.getElementById("windowChanges"),
-		newProperties = document.getElementById("newProperties"),
-		newMethods = document.getElementById("newMethods"),
-		windowCreep = ScopeCreep(window, {
-			properties: ['gaplugins', 'GoogleAnalyticsObject', 'gaGlobal'],
-			methods: ['ga']
-		});
-
-	//preload cdnjs libraries
-	get("http://api.cdnjs.com/libraries", function (data) {
-		var results = JSON.parse(data.response).results;
-		//sort these once here
-		results.sort(function (a, b) {
-			return a.name.length - b.name.length;
-		});
-
-		cdnjsLibraries = results;
-		if (window.location.search) {
-			if (getParameterByName('libs')) {
-				loadLibrariesFromSearch(function () {
-					if (getParameterByName('logs')) {
-						runLogsFromSearch();
-					}
-				});
-			} else {
-				if (getParameterByName('logs')) {
-					runLogsFromSearch();
-				}
-			}
+!function () {
+	function e() {
+		for (var e = S.update(), t = !1, n = 0; n < e.properties.length; n++) {
+			t = !0;
+			var o = document.createElement("li");
+			o.innerHTML = e.properties[n], b.appendChild(o)
 		}
+		for (var n = 0; n < e.methods.length; n++) {
+			t = !0;
+			var o = document.createElement("li");
+			o.innerHTML = e.methods[n], E.appendChild(o)
+		}
+		t && (w.style.display = "block")
+	}
+
+	function t(e, t) {
+		function n() {
+			o.readyState < 4 || 200 === o.status && 4 === o.readyState && t(o)
+		}
+
+		var o;
+		if ("undefined" != typeof XMLHttpRequest)o = new XMLHttpRequest; else for (var i = ["MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp"], l = 0, a = i.length; a > l; l++)try {
+			o = new ActiveXObject(i[l]);
+			break
+		} catch (r) {
+		}
+		return o.onreadystatechange = n, o.open("GET", e, !0), o.send(""), o
+	}
+
+	function n(e, t, n) {
+		function o(n, o) {
+			if (n) {
+				document.getElementById("libraryName").value = "", document.getElementById("librarySuggestions").innerHTML = "", l(v), l(y);
+				var i = document.createElement("li");
+				i.innerHTML = e, document.getElementById("loadedLibraries").appendChild(i), "function" == typeof t && t()
+			} else alert(o)
+		}
+
+		if (e) {
+			if (p.indexOf(e) >= 0)return o(!1, "We already got this for you.");
+			var i = document.createElement("script");
+			i.src = e, i.asynch = !0, i.onreadystatechange = i.onload = function () {
+				var t = i.readyState;
+				o.done || t && !/loaded|complete/.test(t) || (p.push(e), n || r(), o.done = !0, clearTimeout(a), o(!0))
+			}, document.body.appendChild(i);
+			var a = setTimeout(function () {
+				o.done || i.remove(), o(!1, "This little guy didn't make it on time: " + e)
+			}, 2e3);
+			void 0 !== window.ga && window.ga("send", "event", "load", e)
+		}
+	}
+
+	function o(e) {
+		for (var t = [], n = 0; n < m.length; n++)m[n].name.indexOf(e) > -1 && t.push(m[n]);
+		return t
+	}
+
+	function i(e) {
+		e.nextElementSibling.classList.contains("hidden") ? a(e.nextElementSibling) : l(e.nextElementSibling)
+	}
+
+	function l(e) {
+		e.classList.contains("hidden") || e.classList.add("hidden")
+	}
+
+	function a(e) {
+		e.classList.remove("hidden")
+	}
+
+	function r() {
+		for (var e, t = [], n = 0; n < p.length; n++) {
+			var o = p[n].replace(g, "!");
+			t.push(encodeURIComponent(o))
+		}
+		t = t.join(","), e = u("libs", t), window.history.replaceState ? window.history.replaceState(null, null, e) : window.location.search = e
+	}
+
+	function c(t) {
+		function o(t, i) {
+			if ("object" == typeof t && t.length) {
+				var l = t.shift().replace("!", g);
+				n(decodeURIComponent(l), function () {
+					o(t, i)
+				}, !0)
+			} else e(), i()
+		}
+
+		var i = s("libs").split(",");
+		return i && i.length ? void o(i, t) : void t()
+	}
+
+	function d(e) {
+		function t(e, n) {
+			"object" == typeof e && e.length ? (jsConsole.log(decodeURIComponent(e.shift())), window.setTimeout(function () {
+				t(e, n)
+			}, 500)) : n()
+		}
+
+		var n = s("logs").split(",,");
+		return n && n.length ? void t(n, e) : void e()
+	}
+
+	function s(e) {
+		e = e.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var t = new RegExp("[\\?&]" + e + "=([^&#]*)"), n = t.exec(location.search);
+		return null === n ? "" : decodeURIComponent(n[1].replace(/\+/g, " "))
+	}
+
+	function u(e, t) {
+		var n = location.search, o = new RegExp("([?&])" + e + "=.*?(&|$)", "i"), i = -1 !== n.indexOf("?") ? "&" : "?";
+		return n.match(o) ? n.replace(o, "$1" + e + "=" + t + "$2") : n + i + e + "=" + t
+	}
+
+	var m, p = [], g = "http://cdnjs.cloudflare.com/ajax/libs", f = document.getElementById("libraryName"), h = document.getElementById("librarySuggestions"), y = document.getElementById("suggestions-error"), v = document.getElementById("suggestions-help"), w = document.getElementById("windowChanges"), b = document.getElementById("newProperties"), E = document.getElementById("newMethods"), S = ScopeCreep(window, {properties: ["gaplugins", "GoogleAnalyticsObject", "gaGlobal"], methods: ["ga"]});
+	t("http://api.cdnjs.com/libraries", function (e) {
+		var t = JSON.parse(e.response).results;
+		t.sort(function (e, t) {
+			return e.name.length - t.name.length
+		}), m = t, window.location.search && (s("libs") ? c(function () {
+			s("logs") && d()
+		}) : s("logs") && d())
 	});
-
-	//enable hideables
-	var hideables = document.getElementsByClassName("hideable");
-	for (var i = 0; i < hideables.length; i++) {
-		hideables[i].onclick = function () {
-			toggleHideable(this);
-		}
-	}
-
-	//display updates to scope
-	function scopeUpdateViewer() {
-		var update = windowCreep.update(),
-			boom = false;
-
-		for (var i = 0; i < update.properties.length; i++) {
-			boom = true;
-			var li = document.createElement("li");
-			li.innerHTML = update.properties[i];
-			newProperties.appendChild(li);
-		}
-
-		for (var i = 0; i < update.methods.length; i++) {
-			boom = true;
-			var li = document.createElement("li");
-			li.innerHTML = update.methods[i];
-			newMethods.appendChild(li);
-		}
-
-		if (boom) windowChanges.style.display = "block";
-	}
-
-	/*
-	 Append functions to the DOM
-	 */
-
-	//just load the first damn result
+	for (var I = document.getElementsByClassName("hideable"), M = 0; M < I.length; M++)I[M].onclick = function () {
+		i(this)
+	};
 	document.getElementById("libraryForm").onsubmit = function (e) {
-		e.preventDefault();
-
-		librarySuggestions.firstChild.click();
-	};
-
-	//typeahead search
-	libraryInput.onkeyup = function () {
-
-		//reset the results
-		librarySuggestions.innerHTML = "";
-
-		//return if there is no query
-		if (this.value.length < 1) return;
-
-		//get the new stuff
-		var results = searchCdnjs(this.value);
-		//help if we didn"t find anything
-		if (!results.length) {
-			show(suggestionsError);
-			hide(suggestionsHelp);
-			return;
-		}
-		//help if we did find anything
-		show(suggestionsHelp);
-		hide(suggestionsError);
-		//add the anything
-		for (var i = 0; i < results.length; i++) {
-			var li = document.createElement("li");
-			li.onclick = function () {
-				windowCreep.update();
-				loadScript(this.getAttribute("data-src"), scopeUpdateViewer);
-			};
-			li.innerHTML = results[i].name;
-			li.setAttribute("data-src", results[i].latest);
-			document.getElementById("librarySuggestions").appendChild(li);
-		}
-	};
-
-	//backup file loader
-	document.getElementById("loadFromUrl").onclick = function () {
-		windowCreep.update();
-		loadScript(libraryInput.value, scopeUpdateViewer);
-	};
-
-	/*
-	 Utility Functions
-	 */
-
-	//our friendly neighborhood ajax http request
-	function get(url, callback) {
-
-		var xhr;
-
-		if (typeof XMLHttpRequest !== "undefined")
-			xhr = new XMLHttpRequest();
-		else {
-			var versions = [
-				"MSXML2.XmlHttp.5.0",
-				"MSXML2.XmlHttp.4.0",
-				"MSXML2.XmlHttp.3.0",
-				"MSXML2.XmlHttp.2.0",
-				"Microsoft.XmlHttp"
-			];
-
-			for (var i = 0, len = versions.length; i < len; i++) {
-				try {
-					xhr = new ActiveXObject(versions[i]);
-					break;
-				} catch (e) {
-				}
+		e.preventDefault(), h.firstChild.click()
+	}, f.onkeyup = function () {
+		if (h.innerHTML = "", !(this.value.length < 1)) {
+			var t = o(this.value);
+			if (!t.length)return a(y), void l(v);
+			a(v), l(y);
+			for (var i = 0; i < t.length; i++) {
+				var r = document.createElement("li");
+				r.onclick = function () {
+					S.update(), n(this.getAttribute("data-src"), e)
+				}, r.innerHTML = t[i].name, r.setAttribute("data-src", t[i].latest), document.getElementById("librarySuggestions").appendChild(r)
 			}
 		}
-		xhr.onreadystatechange = ensureReadiness;
-		function ensureReadiness() {
-			if (xhr.readyState < 4) {
-				return;
-			}
-			if (xhr.status !== 200) {
-				return;
-			}
-			if (xhr.readyState === 4) {
-				callback(xhr);
-			}
-		}
-
-		xhr.open("GET", url, true);
-		xhr.send("");
-		return xhr;
-	}
-
-	//load a script in a friendly way
-	function loadScript(file, userCallback, skipPersist) {
-
-		//fail fast
-		if (!file) {
-			return;
-		}
-		if (filesLoaded.indexOf(file) >= 0) {
-			return callback(false, "We already got this for you.");
-		}
-
-		//create a script
-		var script = document.createElement("script");
-		script.src = file;
-		script.asynch = true;
-		script.onreadystatechange = script.onload = function () {
-			var state = script.readyState;
-			if (!callback.done && (!state || /loaded|complete/.test(state))) {
-				filesLoaded.push(file);
-				if (!skipPersist) {
-					persistLibrariesToHash();
-				}
-				//clear the dishes
-				callback.done = true;
-				clearTimeout(validator);
-				callback(true);
-			}
-		};
-		document.body.appendChild(script);
-
-		//create a limit
-		var validator = setTimeout(function () {
-			if (!callback.done)
-				script.remove();
-			callback(false, "This little guy didn't make it on time: " + file);
-		}, 2000);
-
-		//analytics
-		if (window.ga !== undefined) {
-			window.ga('send', 'event', 'load', file);
-		}
-
-		//update the world on your life
-		function callback(success, message) {
-			if (success) {
-				document.getElementById("libraryName").value = "";
-				document.getElementById("librarySuggestions").innerHTML = "";
-				hide(suggestionsHelp);
-				hide(suggestionsError);
-
-				var li = document.createElement("li");
-				li.innerHTML = file;
-				document.getElementById("loadedLibraries").appendChild(li);
-				if (typeof userCallback === "function") {
-					userCallback();
-				}
-			} else {
-				alert(message);
-			}
-		}
-	}
-
-	//search cdnjs stuff and return the results
-	function searchCdnjs(query) {
-		var results = [];
-
-		for (var i = 0; i < cdnjsLibraries.length; i++) {
-			if (cdnjsLibraries[i].name.indexOf(query) > -1) {
-				results.push(cdnjsLibraries[i]);
-			}
-		}
-
-		return results;
-	}
-
-	//open or close a hideable element
-	function toggleHideable(element) {
-		if (element.nextElementSibling.classList.contains("hidden")) {
-			show(element.nextElementSibling);
-		} else {
-			hide(element.nextElementSibling);
-		}
-	}
-
-	//remove class helper
-	function hide(element) {
-		if (!element.classList.contains("hidden")) {
-			element.classList.add("hidden");
-		}
-	}
-
-	function show(element) {
-		element.classList.remove("hidden");
-	}
-
-	function persistLibrariesToHash() {
-		var libs = [],
-			url;
-		for (var i = 0; i < filesLoaded.length; i++) {
-			var fileName = filesLoaded[i].replace(cdnjsLibBase, "!");
-			libs.push(encodeURIComponent(fileName));
-		}
-		libs = libs.join(",");
-
-		url = setParameterByName('libs', libs);
-		if (window.history.replaceState) {
-			window.history.replaceState(null, null, url);
-		} else {
-			window.location.search = url;
-		}
-	}
-
-	//persist logs to hash
-	jsConsole.callback(function () {
-		var logs = jsConsole.history().join(',,'),
-			url;
-
-		url = setParameterByName('logs', encodeURIComponent(logs));
-		if (window.history.replaceState) {
-			window.history.replaceState(null, null, url);
-		} else {
-			window.location.search = url;
-		}
-	});
-
-	function loadLibrariesFromSearch(callback) {
-		var filesToLoad = getParameterByName('libs').split(',');
-
-		if (!filesToLoad || !filesToLoad.length) {
-			callback();
-			return;
-		}
-
-		loadLibrary(filesToLoad, callback);
-
-		function loadLibrary(library, callback) {
-			if (typeof library === 'object' && library.length) {
-				var fileUrl = library.shift().replace("!", cdnjsLibBase);
-				loadScript(decodeURIComponent(fileUrl), function () {
-					loadLibrary(library, callback);
-				}, true);
-			} else {
-				scopeUpdateViewer();
-				callback();
-			}
-		}
-	}
-
-	function runLogsFromSearch(callback) {
-		var logsToLoad = getParameterByName('logs').split(',,');
-
-		if (!logsToLoad || !logsToLoad.length) {
-			callback();
-			return;
-		}
-
-		loadLog(logsToLoad, callback);
-
-		function loadLog(log, callback) {
-			if (typeof log === 'object' && log.length) {
-				jsConsole.log(decodeURIComponent(log.shift()));
-				window.setTimeout(function () {
-					loadLog(log, callback);
-				}, 500);
-			} else {
-				callback();
-			}
-		}
-	}
-
-	//http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-	function getParameterByName(name) {
-		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-			results = regex.exec(location.search);
-		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	}
-
-	//http://stackoverflow.com/questions/5999118/add-or-update-query-string-parameter
-	function setParameterByName(key, value) {
-		var uri = location.search;
-		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-		if (uri.match(re)) {
-			return uri.replace(re, '$1' + key + "=" + value + '$2');
-		}
-		else {
-			return uri + separator + key + "=" + value;
-		}
-	}
-})();
+	}, document.getElementById("loadFromUrl").onclick = function () {
+		S.update(), n(f.value, e)
+	}, jsConsole.callback(function () {
+		var e, t = jsConsole.history().join(",,");
+		e = u("logs", encodeURIComponent(t)), window.history.replaceState ? window.history.replaceState(null, null, e) : window.location.search = e
+	})
+}();
+!function (e, n, a, t, c, s, o) {
+	e.GoogleAnalyticsObject = c, e[c] = e[c] || function () {
+		(e[c].q = e[c].q || []).push(arguments)
+	}, e[c].l = 1 * new Date, s = n.createElement(a), o = n.getElementsByTagName(a)[0], s.async = 1, s.src = t, o.parentNode.insertBefore(s, o)
+}(window, document, "script", "//www.google-analytics.com/analytics.js", "ga"), ga("create", "UA-50959303-1", "jsenvy.com"), ga("send", "pageview");

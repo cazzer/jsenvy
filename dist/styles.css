@@ -1,42 +1,54 @@
-#console .h, #console .i {
-  overflow: hidden;
-  text-overflow: ellipsis; }
-  #console .h::before, #console .i::before {
-    content: ">> " attr(title);
-    display: block;
-    font-style: italic;
-    color: gray; }
+#console .i, #console .h {
+	overflow: hidden;
+	text-overflow: ellipsis
+}
+
+#console .i::before, #console .h::before {
+	content: ">> " attr(title);
+	display: block;
+	font-style: italic;
+	color: gray
+}
 
 textarea {
-  max-width: 100%;
-  min-width: 100%; }
+	max-width: 100%;
+	min-width: 100%
+}
 
 ul {
-  list-style: none outside none;
-  padding-left: 0; }
-  ul li {
-    background-color: #e6e6e6;
-    border-radius: 4px;
-    font-size: 1.2em;
-    margin: 0;
-    margin-bottom: 6px;
-    padding: 8px 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; }
+	list-style: none;
+	padding-left: 0
+}
+
+ul li {
+	background-color: #e6e6e6;
+	border-radius: 4px;
+	font-size: 1.2em;
+	margin: 0 0 6px;
+	padding: 8px 20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis
+}
 
 #librarySuggestions li {
-  cursor: pointer; }
-  #librarySuggestions li:hover {
-    background-color: #f5f5f5; }
+	cursor: pointer
+}
+
+#librarySuggestions li:hover {
+	background-color: #f5f5f5
+}
 
 #windowChanges {
-  display: none; }
+	display: none
+}
 
 .hideable {
-  cursor: pointer; }
+	cursor: pointer
+}
 
 .p {
-  font-family: monospace, monospace;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: #46a546; }
+	font-family: monospace, monospace;
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	color: #46a546
+}
