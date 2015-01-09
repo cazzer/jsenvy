@@ -330,7 +330,9 @@
 					loadLog(log, callback);
 				}, 500);
 			} else {
-				callback();
+				if (typeof callback === 'function') {
+					callback()
+				}
 			}
 		}
 	}

@@ -11,12 +11,15 @@ var gulp = require("gulp"),
 	concat = require("gulp-concat");
 
 var distDir = "dist/",
-	htmlFiles = ["src/*.html", "src/favicon.ico"],
+	htmlFiles = [
+		"src/*.html",
+		"src/favicon.ico"
+	],
 	indexJsFiles = ["src/console.js", "src/scope-creep.js", "src/jsenvy.js"],
 	consoleJsFiles = ["src/console.js", "src/jsenvy-console.js"],
 	sassFiles = "src/*.scss";
 
-var vendorFiles = [
+var fonts = [
 		"bower_components/bootstrap/dist/fonts/*"
 	],
 	vendorStyles = [
@@ -27,43 +30,43 @@ var isProd = false;
 
 gulp.task("default", ["watch"]);
 
-gulp.task("watch", ["build"], function() {
+gulp.task("watch", ["build"], function () {
 	gulp.watch(htmlFiles, ["build"]);
 	gulp.watch(indexJsFiles, ["build"]);
 	gulp.watch(consoleJsFiles, ["build"]);
 	gulp.watch(sassFiles, ["build"]);
 });
 
-gulp.task("build", ["vendor"], function() {
+gulp.task("build", ["fonts"], function () {
 	es
 		.merge(views(), logic(), styles(), vendor())
-		.pipe(selectors.run({
+		.pipe(gulpif(isProd, selectors.run({
 			css: ["scss", "css"],
 			html: ["html"]
 		}, {
 			classes: ["hidden", "hideable"],
 			ids: true
-		}))
+		})))
 		.pipe(gulp.dest(distDir));
 });
 
-gulp.task("build-prod", function(callback) {
+gulp.task("build-prod", function (callback) {
 	isProd = true;
 	indexJsFiles.push("src/ga.js");
 	consoleJsFiles.push("src/ga.js");
 	run("build", callback);
 });
 
-gulp.task("vendor", function() {
-	return gulp.src(vendorFiles)
-		.pipe(newer(distDir + "vendor"))
-		.pipe(gulp.dest(distDir + "vendor"));
+gulp.task("fonts", function () {
+	return gulp.src(fonts)
+		.pipe(newer(distDir + "fonts"))
+		.pipe(gulp.dest(distDir + "fonts"));
 });
 
-gulp.task("serve", ["watch"], function() {
+gulp.task("serve", ["watch"], function () {
 	connect.server({
 		root: "dist",
-		port: 8080
+		port: 8000
 	});
 });
 

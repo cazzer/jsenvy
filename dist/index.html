@@ -12,12 +12,12 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="g">
-	<div class="h">
+<div class="jumbotron">
+	<div class="container">
 		<h1>JS Envy</h1>
 
 		<p>
-			For when you just want to mess around in the <span class="i">console</span>.
+			For when you just want to mess around in the <span class="console">console</span>.
 		</p>
 	</div>
 	<a href="https://github.com/calebthebrewer/jsenvy"><img style="position: absolute; top: 0; right: 0; border: 0;"
@@ -25,87 +25,97 @@
 															alt="Fork me on GitHub"
 															data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 </div>
-<div class="h">
-	<div class="j">
-		<div class="k">
-			<div class="l m">
-				<div class="n">
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
 					<form id="libraryForm" role="form">
-						<div class="o">
-							<label for="libraryName" class="p">Library Name:</label>
-							<input type="text" id="libraryName" class="q" autocomplete="off">
+						<div class="form-group">
+							<label for="libraryName" class="control-label">Library Name:</label>
+							<input type="text" id="libraryName" class="form-control" autocomplete="off">
 						</div>
-						<p class="r">
+						<p class="help-block">
 							Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
 							or enter the <strong>full path</strong> to a library and click <a href="#" id="loadFromUrl"
 																							  role="button">here</a>.
 						</p>
 					</form>
 				</div>
-				<div class="s">
-					<p id="suggestions-help" class="t hidden">
+				<div class="panel-body">
+					<p id="suggestions-help" class="text-info hidden">
 						To load a cdnjs library, select it from the list.
 					</p>
 
-					<p id="suggestions-error" class="e hidden">
+					<p id="suggestions-error" class="text-danger hidden">
 						No results, try using the full path option.
 					</p>
 					<ul id="librarySuggestions"></ul>
 				</div>
 			</div>
 		</div>
-		<div class="k">
-			<div class="l m">
-				<div class="n hideable">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading hideable">
 					Loaded Libraries
+					<a title="Persist these libraries to the URL"
+					   id="link-libraries"
+					   class="pull-right boring-link">
+						<span class="float-right glyphicon glyphicon-link"></span>
+					</a>
 				</div>
-				<div class="s">
+				<div class="panel-body">
 					<ul id="loadedLibraries"></ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="windowChanges" class="j">
-		<div class="u">
+	<div id="windowChanges" class="row">
+		<div class="col-md-12">
 			<h3>Window Changes</h3>
 		</div>
-		<div class="k">
-			<div class="l m">
-				<div class="n hideable">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading hideable">
 					New Properties
 				</div>
-				<div class="s">
+				<div class="panel-body">
 					<ul id="newProperties"></ul>
 				</div>
 			</div>
 		</div>
-		<div class="k">
-			<div class="l m">
-				<div class="n hideable">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading hideable">
 					New Methods
 				</div>
-				<div class="s">
+				<div class="panel-body">
 					<ul id="newMethods"></ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="console" class="j">
-		<div class="u">
-			<div class="l m">
-				<div class="n hideable">
+	<div id="console" class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading hideable">
 					Console
+					<a title="Persist these logs to the URL"
+					   id="link-logs"
+					   class="pull-right boring-link">
+						<span class="float-right glyphicon glyphicon-link"></span>
+					</a>
 				</div>
-				<div class="s">
-					<pre id="console-log" class="b">
-						<div id="log-template" class="c"></div>
-						<div id="error-template" class="d e"></div>
+				<div class="panel-body">
+					<pre id="console-log" class="pre-scrollable">
+						<div id="log-template" class="log"></div>
+						<div id="error-template" class="error text-danger"></div>
 					</pre>
 					<form id="console-form" role="form">
-						<div class="o">
-							<input type="text" id="console-input" class="q" autocomplete="off">
+						<div class="form-group">
+							<input type="text" id="console-input" class="form-control" autocomplete="off">
 						</div>
-						<p class="r">
+						<p class="help-block">
 							Prepend your statements with <code>window.</code> to make them stick.
 							Use <code>_console.</code> if you want to access the browser
 							console. You can also hit F12 and use it directly.
@@ -117,8 +127,8 @@
 	</div>
 </div>
 <div id="footer">
-	<div class="h">
-		<p class="v">Use JS Envy to explore libraries with as little effort as possible. For more advanced
+	<div class="container">
+		<p class="text-muted">Use JS Envy to explore libraries with as little effort as possible. For more advanced
 			testing, try <a href="http://jsfiddle.net/">JSFiddle</a>.
 		</p>
 	</div>
