@@ -1,16 +1,15 @@
-(function(document, window) {
+(function(jsenvy, document, window) {
+	jsenvy.jsConsole = {
+		log: log,
+		history: history,
+		callback: callback
+	};
 	//keep track of this guy!
 	var _console = window.console;
 	//elements
 	var consoleLog = document.getElementById('console-log'),
 		consoleForm = document.getElementById('console-form'),
 		consoleInput = document.getElementById('console-input');
-	//our console object
-	window.jsConsole = {
-		log: log,
-		history: history,
-		callback: callback
-	};
 	//templates
 	var templates = {
 		log: document.getElementById('log-template'),
@@ -107,4 +106,4 @@
 			templates[template] = cloned;
 		}
 	})();
-})(document, window);
+})(jsenvy, document, window);
