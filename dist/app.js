@@ -96,11 +96,13 @@
 		preload: preload,
 		search: search,
 		load: load,
-		loaded: loaded
+		loaded: loaded,
+		callback: callback
 	};
 
 	var cdnjsLibraries = [],
-		filesLoaded = [];
+		filesLoaded = [],
+		callbacks = [];
 
 	function preload() {
 		get("http://api.cdnjs.com/libraries", function (data) {
@@ -146,6 +148,9 @@
 				//clear the dishes
 				callback.done = true;
 				clearTimeout(validator);
+				callbacks.forEach(function (fn) {
+					fn(file);
+				});
 				callback(true);
 			}
 		};
@@ -166,6 +171,10 @@
 
 	function loaded() {
 		return filesLoaded;
+	}
+
+	function callback(fn) {
+		callbacks.push(fn);
 	}
 
 	//our friendly neighborhood ajax http request
@@ -371,10 +380,12 @@
 
 	function putInHash(what, where) {
 		var regex = new RegExp(where + '=([^#]*)');
+		if (!regex.exec(location.hash)) return postInHash(what, where);
 		location.hash = location.hash.replace(regex, where + '=' + encodeURIComponent(what));
 	}
 
 	function postInHash(what, where) {
+		removeFromHash(where);
 		location.hash = ifHash(what, where);
 	}
 
@@ -387,6 +398,53 @@
 		return location.hash + '#' + where + '=' + encodeURIComponent(what);
 	}
 })(jsenvy);
+(function (jsenvy) {
+
+	loadLibrariesFromSearch(runLogsFromSearch);
+
+	function loadLibrariesFromSearch(callback) {
+		var libraries = jsenvy.persist.get('libs').split(',');
+
+		if (!libraries || !libraries.length || !libraries[0]) {
+			callback();
+			return;
+		}
+
+		loadLibrary(libraries, callback);
+
+		function loadLibrary(library, callback) {
+			if (typeof library === 'object' && library.length) {
+				jsenvy.libraries.load(library.shift(), function () {
+					loadLibrary(library, callback);
+				}, true);
+			} else {
+				callback();
+			}
+		}
+	}
+
+	function runLogsFromSearch(callback) {
+		var logs = jsenvy.persist.get('logs').split(',,');
+
+		if (!logs || !logs.length || !logs[0]) {
+			if (typeof callback === 'function') callback();
+			return;
+		}
+
+		loadLog(logs, callback);
+
+		function loadLog(log, callback) {
+			if (typeof log === 'object' && log.length) {
+				jsenvy.console.log(log.shift());
+				window.setTimeout(function () {
+					loadLog(log, callback);
+				}, 500);
+			} else {
+				if (typeof callback === 'function') callback();
+			}
+		}
+	}
+})(jsenvy);
 (function (jsenvy, window, document) {
 	//keep track of
 	var libraryInput = document.getElementById("libraryName"),
@@ -394,6 +452,7 @@
 		librarySuggestions = document.getElementById("librarySuggestions"),
 		suggestionsError = document.getElementById("suggestions-error"),
 		suggestionsHelp = document.getElementById("suggestions-help"),
+		loadedLibraries = document.getElementById('loadedLibraries'),
 		windowChanges = document.getElementById("windowChanges"),
 		newProperties = document.getElementById("newProperties"),
 		newMethods = document.getElementById("newMethods"),
@@ -408,6 +467,8 @@
 		libsLinked = true;
 
 	jsenvy.libraries.preload();
+
+	jsenvy.libraries.callback(addToLoadedLibraries);
 
 	//just load the first damn result
 	libraryForm.onsubmit = function (e) {
@@ -471,7 +532,7 @@
 		e.preventDefault();
 		e.stopPropagation();
 		logsLinked = !logsLinked;
-		var logs = jsenvy.console.history().join(',');
+		var logs = jsenvy.console.history().join(',,');
 		if (logsLinked) {
 			linkLogs.href = jsenvy.persist.if('', 'logs');
 			linkLogs.classList.remove('boring-link');
@@ -494,7 +555,7 @@
 	}
 
 	function updateLogs() {
-		var logs = jsenvy.console.history().join(',');
+		var logs = jsenvy.console.history().join(',,');
 		if (logsLinked) {
 			jsenvy.persist.put(logs, 'logs');
 		} else {
@@ -512,16 +573,18 @@
 				jsenvy.hideables.hide(suggestionsHelp);
 				jsenvy.hideables.hide(suggestionsError);
 
-				var li = document.createElement("li");
-				li.innerHTML = url;
-				document.getElementById("loadedLibraries").appendChild(li);
 				updateLibraries();
+				scopeUpdateViewer();
 			} else {
 				alert(message);
 			}
-
-			scopeUpdateViewer();
 		});
+	}
+
+	function addToLoadedLibraries(url) {
+		var li = document.createElement("li");
+		li.innerHTML = url;
+		loadedLibraries.appendChild(li);
 	}
 
 	//display updates to scope

@@ -15,10 +15,12 @@
 
 	function putInHash(what, where) {
 		var regex = new RegExp(where + '=([^#]*)');
+		if (!regex.exec(location.hash)) return postInHash(what, where);
 		location.hash = location.hash.replace(regex, where + '=' + encodeURIComponent(what));
 	}
 
 	function postInHash(what, where) {
+		removeFromHash(where);
 		location.hash = ifHash(what, where);
 	}
 

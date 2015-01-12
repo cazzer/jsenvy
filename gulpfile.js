@@ -22,13 +22,16 @@ var distDir = "dist/",
 		"src/hideables.js",
 		"src/console.js",
 		"src/persist.js",
+		"src/load-from-persist.js",
 		"src/jsenvy.js",
 		"!src/ga.js"
 	],
 	consoleJsFiles = [
 		"src/jsenvy.module.js",
+		"src/libraries.js",
+		"src/persist.js",
 		"src/console.js",
-		"src/jsenvy-console.js"
+		"src/load-from-persist.js"
 	],
 	sassFiles = "src/*.scss";
 

@@ -5,6 +5,7 @@
 		librarySuggestions = document.getElementById("librarySuggestions"),
 		suggestionsError = document.getElementById("suggestions-error"),
 		suggestionsHelp = document.getElementById("suggestions-help"),
+		loadedLibraries = document.getElementById('loadedLibraries'),
 		windowChanges = document.getElementById("windowChanges"),
 		newProperties = document.getElementById("newProperties"),
 		newMethods = document.getElementById("newMethods"),
@@ -19,6 +20,8 @@
 		libsLinked = true;
 
 	jsenvy.libraries.preload();
+
+	jsenvy.libraries.callback(addToLoadedLibraries);
 
 	//just load the first damn result
 	libraryForm.onsubmit = function (e) {
@@ -82,7 +85,7 @@
 		e.preventDefault();
 		e.stopPropagation();
 		logsLinked = !logsLinked;
-		var logs = jsenvy.console.history().join(',');
+		var logs = jsenvy.console.history().join(',,');
 		if (logsLinked) {
 			linkLogs.href = jsenvy.persist.if('', 'logs');
 			linkLogs.classList.remove('boring-link');
@@ -105,7 +108,7 @@
 	}
 
 	function updateLogs() {
-		var logs = jsenvy.console.history().join(',');
+		var logs = jsenvy.console.history().join(',,');
 		if (logsLinked) {
 			jsenvy.persist.put(logs, 'logs');
 		} else {
@@ -123,16 +126,18 @@
 				jsenvy.hideables.hide(suggestionsHelp);
 				jsenvy.hideables.hide(suggestionsError);
 
-				var li = document.createElement("li");
-				li.innerHTML = url;
-				document.getElementById("loadedLibraries").appendChild(li);
 				updateLibraries();
+				scopeUpdateViewer();
 			} else {
 				alert(message);
 			}
-
-			scopeUpdateViewer();
 		});
+	}
+
+	function addToLoadedLibraries(url) {
+		var li = document.createElement("li");
+		li.innerHTML = url;
+		loadedLibraries.appendChild(li);
 	}
 
 	//display updates to scope

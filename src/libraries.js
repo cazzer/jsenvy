@@ -3,11 +3,13 @@
 		preload: preload,
 		search: search,
 		load: load,
-		loaded: loaded
+		loaded: loaded,
+		callback: callback
 	};
 
 	var cdnjsLibraries = [],
-		filesLoaded = [];
+		filesLoaded = [],
+		callbacks = [];
 
 	function preload() {
 		get("http://api.cdnjs.com/libraries", function (data) {
@@ -53,6 +55,9 @@
 				//clear the dishes
 				callback.done = true;
 				clearTimeout(validator);
+				callbacks.forEach(function (fn) {
+					fn(file);
+				});
 				callback(true);
 			}
 		};
@@ -73,6 +78,10 @@
 
 	function loaded() {
 		return filesLoaded;
+	}
+
+	function callback(fn) {
+		callbacks.push(fn);
 	}
 
 	//our friendly neighborhood ajax http request
