@@ -12,12 +12,12 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="jumbotron">
-	<div class="container">
+<div class="g">
+	<div class="h">
 		<h1>JS Envy</h1>
 
 		<p>
-			For when you just want to mess around in the <span class="console">console</span>.
+			For when you just want to mess around in the <span class="i">console</span>.
 		</p>
 	</div>
 	<a href="https://github.com/calebthebrewer/jsenvy"><img style="position: absolute; top: 0; right: 0; border: 0;"
@@ -25,102 +25,102 @@
 															alt="Fork me on GitHub"
 															data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 </div>
-<div class="container">
-	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
+<div class="h">
+	<div class="j">
+		<div class="k">
+			<div class="l m">
+				<div class="n">
 					<form id="libraryForm" role="form">
-						<div class="form-group">
-							<label for="libraryName" class="control-label">Library Name:</label>
-							<input type="text" id="libraryName" class="form-control" autocomplete="off">
+						<div class="o">
+							<label for="libraryName" class="p">Library Name:</label>
+							<input type="text" id="libraryName" class="q" autocomplete="off">
 						</div>
-						<p class="help-block">
+						<p class="r">
 							Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
 							or enter the <strong>full path</strong> to a library and click <a href="#" id="loadFromUrl"
 																							  role="button">here</a>.
 						</p>
 					</form>
 				</div>
-				<div class="panel-body">
-					<p id="suggestions-help" class="text-info hidden">
+				<div class="s">
+					<p id="suggestions-help" class="t hidden">
 						To load a cdnjs library, select it from the list.
 					</p>
 
-					<p id="suggestions-error" class="text-danger hidden">
+					<p id="suggestions-error" class="e hidden">
 						No results, try using the full path option.
 					</p>
 					<ul id="librarySuggestions"></ul>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading hideable">
+		<div class="k">
+			<div class="l m">
+				<div class="n hideable">
 					Loaded Libraries
 					<a title="Persist these libraries to the URL"
 					   id="link-libraries"
-					   class="pull-right panel-button">
-						<span class="float-right glyphicon glyphicon-link"></span>
+					   class="u v">
+						<span class="w x y"></span>
 					</a>
 				</div>
-				<div class="panel-body">
+				<div class="s">
 					<ul id="loadedLibraries"></ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="windowChanges" class="row">
-		<div class="col-md-12">
+	<div id="windowChanges" class="j">
+		<div class="z">
 			<h3>Window Changes</h3>
 		</div>
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading hideable">
+		<div class="k">
+			<div class="l m">
+				<div class="n hideable">
 					New Properties
 				</div>
-				<div class="panel-body">
+				<div class="s">
 					<ul id="newProperties"></ul>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading hideable">
+		<div class="k">
+			<div class="l m">
+				<div class="n hideable">
 					New Methods
 				</div>
-				<div class="panel-body">
+				<div class="s">
 					<ul id="newMethods"></ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="console" class="row">
-		<div class="col-md-12">
-			<div class="panel panel-default">
-				<div class="panel-heading hideable">
+	<div id="console" class="j">
+		<div class="z">
+			<div class="l m">
+				<div class="n hideable">
 					Console
 					<a title="Persist these logs to the URL"
 					   id="link-logs"
-					   class="pull-right panel-button">
-						<span class="float-right glyphicon glyphicon-link"></span>
+					   class="u v">
+						<span class="w x y"></span>
 					</a>
 					<a title="Embed this console on your website."
 					   id="embed-console"
-					   class="pull-right panel-button">
-						<span class="float-right glyphicon glyphicon-share"></span>
+					   class="u v">
+						<span class="w x aa"></span>
 					</a>
 				</div>
-				<div class="panel-body">
-					<pre id="console-log" class="pre-scrollable">
-						<div id="log-template" class="log"></div>
-						<div id="error-template" class="error text-danger"></div>
+				<div class="s">
+					<pre id="console-log" class="b">
+						<div id="log-template" class="c"></div>
+						<div id="error-template" class="d e"></div>
 					</pre>
 					<form id="console-form" role="form">
-						<div class="form-group">
-							<input type="text" id="console-input" class="form-control" autocomplete="off">
+						<div class="o">
+							<input type="text" id="console-input" class="q" autocomplete="off">
 						</div>
-						<p class="help-block">
+						<p class="r">
 							Prepend your statements with <code>window.</code> to make them stick.
 							Use <code>_console.</code> if you want to access the browser
 							console. You can also hit F12 and use it directly.
@@ -132,22 +132,22 @@
 	</div>
 </div>
 <div id="footer">
-	<div class="container">
-		<p class="text-muted">Use JS Envy to explore libraries with as little effort as possible. For more advanced
+	<div class="h">
+		<p class="ab">Use JS Envy to explore libraries with as little effort as possible. For more advanced
 			testing, try <a href="http://jsfiddle.net/">JSFiddle</a>. Having an issue?
 			<a title="Github Issues" href="https://github.com/calebthebrewer/jsenvy/issues">Let me know about it.</a>
 		</p>
 	</div>
 </div>
-<div id="embed-code-modal" class="modal fade in">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button id="close-modal" type="button" class="close" aria-label="Close"><span
+<div id="embed-code-modal" class="ac ad ae">
+	<div class="af">
+		<div class="ag">
+			<div class="ah">
+				<button id="close-modal" type="button" class="ai" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Embed Code</h4>
+				<h4 class="aj">Embed Code</h4>
 			</div>
-			<div class="modal-body">
+			<div class="ak">
 				<p>Copy this onto your site to embed the mini-console version of this page.</p>
 				<textarea id="embed-code" disabled></textarea>
 			</div>

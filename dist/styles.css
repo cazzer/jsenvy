@@ -1,62 +1,84 @@
-#console .log, #console .error {
-  overflow: hidden;
-  text-overflow: ellipsis; }
-  #console .log::before, #console .error::before {
-    content: ">> " attr(title);
-    display: block;
-    font-style: italic;
-    color: gray; }
-#console.mini {
-  position: relative; }
-  #console.mini .pre-scrollable {
-    height: 100%; }
-  #console.mini .console-input {
-    width: 100%; }
+#console .d, #console .c {
+	overflow: hidden;
+	text-overflow: ellipsis
+}
+
+#console .d::before, #console .c::before {
+	content: ">> " attr(title);
+	display: block;
+	font-style: italic;
+	color: gray
+}
+
+#console.a {
+	position: relative
+}
+
+#console.a .b {
+	height: 100%
+}
+
+#console.a .f {
+	width: 100%
+}
 
 #console-log {
-  background-image: url('js-envy-25.png');
-  background-repeat: no-repeat;
-  background-position: center; }
+	background-image: url(js-envy-25.png);
+	background-repeat: no-repeat;
+	background-position: center
+}
 
 textarea {
-  max-width: 100%;
-  min-width: 100%; }
+	max-width: 100%;
+	min-width: 100%
+}
 
 ul {
-  list-style: none outside none;
-  padding-left: 0; }
-  ul li {
-    background-color: #e6e6e6;
-    border-radius: 4px;
-    font-size: 1.2em;
-    margin: 0;
-    margin-bottom: 6px;
-    padding: 8px 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; }
+	list-style: none;
+	padding-left: 0
+}
+
+ul li {
+	background-color: #e6e6e6;
+	border-radius: 4px;
+	font-size: 1.2em;
+	margin: 0 0 6px;
+	padding: 8px 20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis
+}
 
 #librarySuggestions li {
-  cursor: pointer; }
-  #librarySuggestions li:hover {
-    background-color: #f5f5f5; }
+	cursor: pointer
+}
+
+#librarySuggestions li:hover {
+	background-color: #f5f5f5
+}
 
 #windowChanges {
-  display: none; }
+	display: none
+}
 
 .hideable {
-  cursor: pointer; }
+	cursor: pointer
+}
 
-.console {
-  font-family: monospace, monospace;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: #46a546; }
+.i {
+	font-family: monospace, monospace;
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	color: #46a546
+}
 
 .boring-link {
-  color: #737373; }
+	color: #737373
+}
 
-.panel-button {
-  padding: 0 4px; }
+.v {
+	padding: 0 4px
+}
 
 #embed-code {
-  min-height: 120px; }
+	min-height: 120px
+}
