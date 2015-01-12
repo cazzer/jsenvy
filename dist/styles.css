@@ -1,71 +1,51 @@
 #console .log, #console .error {
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-#console .log::before, #console .error::before {
-	content: ">> " attr(title);
-	display: block;
-	font-style: italic;
-	color: gray;
-}
-
+  overflow: hidden;
+  text-overflow: ellipsis; }
+  #console .log::before, #console .error::before {
+    content: ">> " attr(title);
+    display: block;
+    font-style: italic;
+    color: gray; }
 #console.mini {
-	position: relative;
-}
-
-#console.mini .pre-scrollable {
-	height: 100%;
-}
-
-#console.mini .console-input {
-	width: 100%;
-}
+  position: relative; }
+  #console.mini .pre-scrollable {
+    height: 100%; }
+  #console.mini .console-input {
+    width: 100%; }
 
 textarea {
-	max-width: 100%;
-	min-width: 100%;
-}
+  max-width: 100%;
+  min-width: 100%; }
 
 ul {
-	list-style: none outside none;
-	padding-left: 0;
-}
-
-ul li {
-	background-color: #e6e6e6;
-	border-radius: 4px;
-	font-size: 1.2em;
-	margin: 0;
-	margin-bottom: 6px;
-	padding: 8px 20px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
+  list-style: none outside none;
+  padding-left: 0; }
+  ul li {
+    background-color: #e6e6e6;
+    border-radius: 4px;
+    font-size: 1.2em;
+    margin: 0;
+    margin-bottom: 6px;
+    padding: 8px 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
 
 #librarySuggestions li {
-	cursor: pointer;
-}
-
-#librarySuggestions li:hover {
-	background-color: #f5f5f5;
-}
+  cursor: pointer; }
+  #librarySuggestions li:hover {
+    background-color: #f5f5f5; }
 
 #windowChanges {
-	display: none;
-}
+  display: none; }
 
 .hideable {
-	cursor: pointer;
-}
+  cursor: pointer; }
 
 .console {
-	font-family: monospace, monospace;
-	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	color: #46a546;
-}
+  font-family: monospace, monospace;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  color: #46a546; }
 
 .boring-link {
-	color: #737373;
-}
+  color: #737373; }

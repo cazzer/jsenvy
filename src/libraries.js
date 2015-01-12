@@ -2,7 +2,8 @@
 	jsenvy.libraries = {
 		preload: preload,
 		search: search,
-		load: load
+		load: load,
+		loaded: loaded
 	};
 
 	var cdnjsLibraries = [],
@@ -68,6 +69,10 @@
 		if (window.ga !== undefined) {
 			window.ga('send', 'event', 'load', file);
 		}
+	}
+
+	function loaded() {
+		return filesLoaded;
 	}
 
 	//our friendly neighborhood ajax http request

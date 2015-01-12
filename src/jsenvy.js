@@ -8,10 +8,15 @@
 		windowChanges = document.getElementById("windowChanges"),
 		newProperties = document.getElementById("newProperties"),
 		newMethods = document.getElementById("newMethods"),
+		linkLogs = document.getElementById('link-logs'),
+		linkLibs = document.getElementById('link-libraries'),
 		windowCreep = jsenvy.ScopeCreep(window, {
 			properties: ['gaplugins', 'GoogleAnalyticsObject', 'gaGlobal'],
 			methods: ['ga']
 		});
+
+	var logsLinked = false,
+		libsLinked = false;
 
 	jsenvy.libraries.preload();
 
@@ -67,6 +72,7 @@
 				var li = document.createElement("li");
 				li.innerHTML = url;
 				document.getElementById("loadedLibraries").appendChild(li);
+				linkLibs.href = jsenvy.persist.if(jsenvy.libraries.loaded().join(','), 'libs')
 			} else {
 				alert(message);
 			}
@@ -74,6 +80,10 @@
 			scopeUpdateViewer();
 		});
 	}
+
+	linkLibs.onclick = function() {
+
+	};
 
 	//display updates to scope
 	function scopeUpdateViewer() {

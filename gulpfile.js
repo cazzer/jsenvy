@@ -15,8 +15,21 @@ var distDir = "dist/",
 		"src/*.html",
 		"src/favicon.ico"
 	],
-	indexJsFiles = ["src/console.js", "src/scope-creep.js", "src/jsenvy.js"],
-	consoleJsFiles = ["src/console.js", "src/jsenvy-console.js"],
+	indexJsFiles = [
+		"src/jsenvy.module.js",
+		"src/scope-creep.js",
+		"src/libraries.js",
+		"src/hideables.js",
+		"src/console.js",
+		"src/persist.js",
+		"src/jsenvy.js",
+		"!src/ga.js"
+	],
+	consoleJsFiles = [
+		"src/jsenvy.module.js",
+		"src/console.js",
+		"src/jsenvy-console.js"
+	],
 	sassFiles = "src/*.scss";
 
 var fonts = [
@@ -44,7 +57,7 @@ gulp.task("build", ["fonts"], function () {
 			css: ["scss", "css"],
 			html: ["html"]
 		}, {
-			classes: ["hidden", "hideable"],
+			classes: ["hidden", "hideable", "boring-link"],
 			ids: true
 		})))
 		.pipe(gulp.dest(distDir));
