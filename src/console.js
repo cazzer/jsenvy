@@ -1,5 +1,5 @@
-(function(jsenvy, document, window) {
-	jsenvy.jsConsole = {
+(function (jsenvy, document, window) {
+	jsenvy.console = {
 		log: log,
 		history: history,
 		callback: callback
@@ -20,12 +20,12 @@
 		callbacks = [];
 
 	//attach events
-	consoleForm.onsubmit = function(e) {
+	consoleForm.onsubmit = function (e) {
 		e.preventDefault();
 		log();
 	};
 
-	consoleInput.onkeyup = function(e) {
+	consoleInput.onkeyup = function (e) {
 		switch (e.keyCode) {
 			case 38: //"up"
 				consoleHistory(-1);
@@ -98,7 +98,7 @@
 	}
 
 	//process templates
-	(function() {
+	(function () {
 		for (var template in templates) {
 			var cloned = templates[template].cloneNode();
 			cloned.id = '';

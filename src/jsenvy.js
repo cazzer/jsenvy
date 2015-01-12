@@ -15,8 +15,8 @@
 			methods: ['ga']
 		});
 
-	var logsLinked = false,
-		libsLinked = false;
+	var logsLinked = true,
+		libsLinked = true;
 
 	jsenvy.libraries.preload();
 
@@ -60,6 +60,60 @@
 		loadLibrary(libraryInput.value);
 	};
 
+	jsenvy.console.callback(updateLogs);
+
+	linkLibs.onclick = function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		libsLinked = !libsLinked;
+		var libs = jsenvy.libraries.loaded().join(',');
+		if (libsLinked) {
+			linkLibs.href = jsenvy.persist.if('', 'libs');
+			linkLibs.classList.remove('boring-link');
+			jsenvy.persist.post(libs, 'libs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(libs, 'libs');
+			linkLibs.classList.add('boring-link');
+			jsenvy.persist.remove('libs');
+		}
+	};
+
+	linkLogs.onclick = function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		logsLinked = !logsLinked;
+		var logs = jsenvy.console.history().join(',');
+		if (logsLinked) {
+			linkLogs.href = jsenvy.persist.if('', 'logs');
+			linkLogs.classList.remove('boring-link');
+			jsenvy.persist.post(logs, 'logs');
+		} else {
+			linkLogs.href = jsenvy.persist.if(logs, 'logs');
+			linkLogs.classList.add('boring-link');
+			jsenvy.persist.remove('logs');
+		}
+	};
+
+	//update urls or links
+	function updateLibraries() {
+		var libs = jsenvy.libraries.loaded().join(',');
+		if (libsLinked) {
+			jsenvy.persist.put(libs, 'libs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(libs, 'libs');
+		}
+	}
+
+	function updateLogs() {
+		var logs = jsenvy.console.history().join(',');
+		if (logsLinked) {
+			jsenvy.persist.put(logs, 'logs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(logs, 'logs');
+		}
+	}
+
+
 	function loadLibrary(url) {
 		windowCreep.update();
 		jsenvy.libraries.load(url, function(success, message) {
@@ -72,7 +126,7 @@
 				var li = document.createElement("li");
 				li.innerHTML = url;
 				document.getElementById("loadedLibraries").appendChild(li);
-				linkLibs.href = jsenvy.persist.if(jsenvy.libraries.loaded().join(','), 'libs')
+				updateLibraries();
 			} else {
 				alert(message);
 			}
@@ -80,10 +134,6 @@
 			scopeUpdateViewer();
 		});
 	}
-
-	linkLibs.onclick = function() {
-
-	};
 
 	//display updates to scope
 	function scopeUpdateViewer() {

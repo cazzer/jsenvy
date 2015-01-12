@@ -1,112 +1,7 @@
-(function(jsenvy, document, window) {
-	jsenvy.jsConsole = {
-		log: log,
-		history: history,
-		callback: callback
-	};
-	//keep track of this guy!
-	var _console = window.console;
-	//elements
-	var consoleLog = document.getElementById('console-log'),
-		consoleForm = document.getElementById('console-form'),
-		consoleInput = document.getElementById('console-input');
-	//templates
-	var templates = {
-		log: document.getElementById('log-template'),
-		error: document.getElementById('error-template')
-	};
-	//random variables
-	var consoleHistoryIndex = 0,
-		callbacks = [];
-
-	//attach events
-	consoleForm.onsubmit = function(e) {
-		e.preventDefault();
-		log();
-	};
-
-	consoleInput.onkeyup = function(e) {
-		switch (e.keyCode) {
-			case 38: //"up"
-				consoleHistory(-1);
-				break;
-			case 40: //"down"
-				consoleHistory(+1);
-				break;
-			default:
-				break;
-		}
-	};
-
-	function callback(fn) {
-		callbacks.push(fn);
-	}
-
-	function runCallbacks() {
-		callbacks.forEach(function (fn) {
-			fn();
-		});
-	}
-
-	function log(value) {
-		var expression = value || consoleInput.value;
-		if (expression === '') return;
-
-		consoleInput.value = '';
-		//here is the magic
-		try {
-			var value = eval(expression),
-				entry = templates.log.cloneNode();
-
-			entry.title = expression;
-			entry.innerHTML = value;
-			consoleLog.appendChild(entry);
-		} catch (error) {
-			var entry = templates.error.cloneNode();
-
-			entry.title = expression;
-			entry.innerHTML = error.message;
-			consoleLog.appendChild(entry);
-		}
-		//keep the console at the bottom
-		consoleLog.scrollTop = consoleLog.scrollHeight;
-		consoleHistoryIndex = consoleLog.childElementCount;
-		runCallbacks();
-	}
-
-	function consoleHistory(operation) {
-		if (consoleHistoryIndex + operation > -1 &&
-			consoleHistoryIndex + operation <= consoleLog.childElementCount) {
-			consoleHistoryIndex = consoleHistoryIndex + operation;
-		}
-		if (consoleHistoryIndex === consoleLog.childElementCount) {
-			consoleInput.value = '';
-		} else if (consoleLog.childElementCount) {
-			consoleInput.value = consoleLog.children[consoleHistoryIndex].title;
-		}
-	}
-
-	function history() {
-		var logs = consoleLog.children,
-			statements = [];
-
-		for (var i = 0, l = logs.length; i < l; i++) {
-			statements.push(logs[i].title);
-		}
-
-		return statements;
-	}
-
-	//process templates
-	(function() {
-		for (var template in templates) {
-			var cloned = templates[template].cloneNode();
-			cloned.id = '';
-			templates[template].remove();
-			templates[template] = cloned;
-		}
-	})();
-})(jsenvy, document, window);
+(function(window) {
+	//export a global to work with
+	window.jsenvy = {};
+})(window);
 (function(jsenvy) {
 	/**
 	 }
@@ -196,6 +91,302 @@
 		}
 	};
 })(jsenvy);
+(function(jsenvy, document) {
+	jsenvy.libraries = {
+		preload: preload,
+		search: search,
+		load: load,
+		loaded: loaded
+	};
+
+	var cdnjsLibraries = [],
+		filesLoaded = [];
+
+	function preload() {
+		get("http://api.cdnjs.com/libraries", function (data) {
+			var results = JSON.parse(data.response).results;
+			//sort these once here
+			results.sort(function (a, b) {
+				return a.name.length - b.name.length;
+			});
+
+			cdnjsLibraries = results;
+		});
+	}
+
+	function search(query) {
+		var results = [];
+
+		for (var i = 0; i < cdnjsLibraries.length; i++) {
+			if (cdnjsLibraries[i].name.indexOf(query) > -1) {
+				results.push(cdnjsLibraries[i]);
+			}
+		}
+
+		return results;
+	}
+
+	function load(file, callback) {
+		//fail fast
+		if (!file) {
+			return;
+		}
+		if (filesLoaded.indexOf(file) >= 0) {
+			return callback(false, "We already got this for you.");
+		}
+
+		//create a script
+		var script = document.createElement("script");
+		script.src = file;
+		script.asynch = true;
+		script.onreadystatechange = script.onload = function () {
+			var state = script.readyState;
+			if (!callback.done && (!state || /loaded|complete/.test(state))) {
+				filesLoaded.push(file);
+				//clear the dishes
+				callback.done = true;
+				clearTimeout(validator);
+				callback(true);
+			}
+		};
+		document.body.appendChild(script);
+
+		//create a limit
+		var validator = setTimeout(function () {
+			if (!callback.done)
+				script.remove();
+			callback(false, "This little guy didn't make it on time: " + file);
+		}, 2000);
+
+		//analytics
+		if (window.ga !== undefined) {
+			window.ga('send', 'event', 'load', file);
+		}
+	}
+
+	function loaded() {
+		return filesLoaded;
+	}
+
+	//our friendly neighborhood ajax http request
+	function get(url, callback) {
+
+		var xhr;
+
+		if (typeof XMLHttpRequest !== "undefined")
+			xhr = new XMLHttpRequest();
+		else {
+			var versions = [
+				"MSXML2.XmlHttp.5.0",
+				"MSXML2.XmlHttp.4.0",
+				"MSXML2.XmlHttp.3.0",
+				"MSXML2.XmlHttp.2.0",
+				"Microsoft.XmlHttp"
+			];
+
+			for (var i = 0, len = versions.length; i < len; i++) {
+				try {
+					xhr = new ActiveXObject(versions[i]);
+					break;
+				} catch (e) {
+				}
+			}
+		}
+		xhr.onreadystatechange = ensureReadiness;
+		function ensureReadiness() {
+			if (xhr.readyState < 4) {
+				return;
+			}
+			if (xhr.status !== 200) {
+				return;
+			}
+			if (xhr.readyState === 4) {
+				callback(xhr);
+			}
+		}
+
+		xhr.open("GET", url, true);
+		xhr.send("");
+		return xhr;
+	}
+
+})(jsenvy, document);
+(function(jsenvy, document) {
+	jsenvy.hideables = {
+		hide: hide,
+		show: show
+	};
+
+	//enable hideables
+	var hideables = document.getElementsByClassName("hideable");
+	for (var i = 0; i < hideables.length; i++) {
+		hideables[i].onclick = function () {
+			toggleHideable(this);
+		}
+	}
+
+	//open or close a hideable element
+	function toggleHideable(element) {
+		if (element.nextElementSibling.classList.contains("hidden")) {
+			show(element.nextElementSibling);
+		} else {
+			hide(element.nextElementSibling);
+		}
+	}
+
+	//remove class helper
+	function hide(element) {
+		if (!element.classList.contains("hidden")) {
+			element.classList.add("hidden");
+		}
+	}
+
+	function show(element) {
+		element.classList.remove("hidden");
+	}
+})(jsenvy, document);
+(function (jsenvy, document, window) {
+	jsenvy.console = {
+		log: log,
+		history: history,
+		callback: callback
+	};
+	//keep track of this guy!
+	var _console = window.console;
+	//elements
+	var consoleLog = document.getElementById('console-log'),
+		consoleForm = document.getElementById('console-form'),
+		consoleInput = document.getElementById('console-input');
+	//templates
+	var templates = {
+		log: document.getElementById('log-template'),
+		error: document.getElementById('error-template')
+	};
+	//random variables
+	var consoleHistoryIndex = 0,
+		callbacks = [];
+
+	//attach events
+	consoleForm.onsubmit = function (e) {
+		e.preventDefault();
+		log();
+	};
+
+	consoleInput.onkeyup = function (e) {
+		switch (e.keyCode) {
+			case 38: //"up"
+				consoleHistory(-1);
+				break;
+			case 40: //"down"
+				consoleHistory(+1);
+				break;
+			default:
+				break;
+		}
+	};
+
+	function callback(fn) {
+		callbacks.push(fn);
+	}
+
+	function runCallbacks() {
+		callbacks.forEach(function (fn) {
+			fn();
+		});
+	}
+
+	function log(value) {
+		var expression = value || consoleInput.value;
+		if (expression === '') return;
+
+		consoleInput.value = '';
+		//here is the magic
+		try {
+			var value = eval(expression),
+				entry = templates.log.cloneNode();
+
+			entry.title = expression;
+			entry.innerHTML = value;
+			consoleLog.appendChild(entry);
+		} catch (error) {
+			var entry = templates.error.cloneNode();
+
+			entry.title = expression;
+			entry.innerHTML = error.message;
+			consoleLog.appendChild(entry);
+		}
+		//keep the console at the bottom
+		consoleLog.scrollTop = consoleLog.scrollHeight;
+		consoleHistoryIndex = consoleLog.childElementCount;
+		runCallbacks();
+	}
+
+	function consoleHistory(operation) {
+		if (consoleHistoryIndex + operation > -1 &&
+			consoleHistoryIndex + operation <= consoleLog.childElementCount) {
+			consoleHistoryIndex = consoleHistoryIndex + operation;
+		}
+		if (consoleHistoryIndex === consoleLog.childElementCount) {
+			consoleInput.value = '';
+		} else if (consoleLog.childElementCount) {
+			consoleInput.value = consoleLog.children[consoleHistoryIndex].title;
+		}
+	}
+
+	function history() {
+		var logs = consoleLog.children,
+			statements = [];
+
+		for (var i = 0, l = logs.length; i < l; i++) {
+			statements.push(logs[i].title);
+		}
+
+		return statements;
+	}
+
+	//process templates
+	(function () {
+		for (var template in templates) {
+			var cloned = templates[template].cloneNode();
+			cloned.id = '';
+			templates[template].remove();
+			templates[template] = cloned;
+		}
+	})();
+})(jsenvy, document, window);
+(function(jsenvy) {
+	jsenvy.persist = {
+		get: getFromHash,
+		put: putInHash,
+		post: postInHash,
+		remove: removeFromHash,
+		if: ifHash
+	};
+
+	function getFromHash(where) {
+		var regex = new RegExp('[\\#]' + where + '=([^#]*)'),
+			results = regex.exec(location.hash);
+		return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+
+	function putInHash(what, where) {
+		var regex = new RegExp(where + '=([^#]*)');
+		location.hash = location.hash.replace(regex, where + '=' + encodeURIComponent(what));
+	}
+
+	function postInHash(what, where) {
+		location.hash = ifHash(what, where);
+	}
+
+	function removeFromHash(where) {
+		var regex = new RegExp('[#]' + where + '=([^#]*)');
+		location.hash = location.hash.replace(regex, '');
+	}
+
+	function ifHash(what, where) {
+		return location.hash + '#' + where + '=' + encodeURIComponent(what);
+	}
+})(jsenvy);
 (function (jsenvy, window, document) {
 	//keep track of
 	var libraryInput = document.getElementById("libraryName"),
@@ -213,8 +404,8 @@
 			methods: ['ga']
 		});
 
-	var logsLinked = false,
-		libsLinked = false;
+	var logsLinked = true,
+		libsLinked = true;
 
 	jsenvy.libraries.preload();
 
@@ -258,6 +449,60 @@
 		loadLibrary(libraryInput.value);
 	};
 
+	jsenvy.console.callback(updateLogs);
+
+	linkLibs.onclick = function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		libsLinked = !libsLinked;
+		var libs = jsenvy.libraries.loaded().join(',');
+		if (libsLinked) {
+			linkLibs.href = jsenvy.persist.if('', 'libs');
+			linkLibs.classList.remove('boring-link');
+			jsenvy.persist.post(libs, 'libs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(libs, 'libs');
+			linkLibs.classList.add('boring-link');
+			jsenvy.persist.remove('libs');
+		}
+	};
+
+	linkLogs.onclick = function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		logsLinked = !logsLinked;
+		var logs = jsenvy.console.history().join(',');
+		if (logsLinked) {
+			linkLogs.href = jsenvy.persist.if('', 'logs');
+			linkLogs.classList.remove('boring-link');
+			jsenvy.persist.post(logs, 'logs');
+		} else {
+			linkLogs.href = jsenvy.persist.if(logs, 'logs');
+			linkLogs.classList.add('boring-link');
+			jsenvy.persist.remove('logs');
+		}
+	};
+
+	//update urls or links
+	function updateLibraries() {
+		var libs = jsenvy.libraries.loaded().join(',');
+		if (libsLinked) {
+			jsenvy.persist.put(libs, 'libs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(libs, 'libs');
+		}
+	}
+
+	function updateLogs() {
+		var logs = jsenvy.console.history().join(',');
+		if (logsLinked) {
+			jsenvy.persist.put(logs, 'logs');
+		} else {
+			linkLibs.href = jsenvy.persist.if(logs, 'logs');
+		}
+	}
+
+
 	function loadLibrary(url) {
 		windowCreep.update();
 		jsenvy.libraries.load(url, function(success, message) {
@@ -270,7 +515,7 @@
 				var li = document.createElement("li");
 				li.innerHTML = url;
 				document.getElementById("loadedLibraries").appendChild(li);
-				linkLibs.href = jsenvy.persist.if(jsenvy.libraries.loaded().join(','), 'libs')
+				updateLibraries();
 			} else {
 				alert(message);
 			}
@@ -278,10 +523,6 @@
 			scopeUpdateViewer();
 		});
 	}
-
-	linkLibs.onclick = function() {
-
-	};
 
 	//display updates to scope
 	function scopeUpdateViewer() {
