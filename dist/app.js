@@ -398,53 +398,6 @@
 		return location.hash + '#' + where + '=' + encodeURIComponent(what);
 	}
 })(jsenvy);
-(function (jsenvy) {
-
-	loadLibrariesFromSearch(runLogsFromSearch);
-
-	function loadLibrariesFromSearch(callback) {
-		var libraries = jsenvy.persist.get('libs').split(',');
-
-		if (!libraries || !libraries.length || !libraries[0]) {
-			callback();
-			return;
-		}
-
-		loadLibrary(libraries, callback);
-
-		function loadLibrary(library, callback) {
-			if (typeof library === 'object' && library.length) {
-				jsenvy.libraries.load(library.shift(), function () {
-					loadLibrary(library, callback);
-				}, true);
-			} else {
-				callback();
-			}
-		}
-	}
-
-	function runLogsFromSearch(callback) {
-		var logs = jsenvy.persist.get('logs').split(',,');
-
-		if (!logs || !logs.length || !logs[0]) {
-			if (typeof callback === 'function') callback();
-			return;
-		}
-
-		loadLog(logs, callback);
-
-		function loadLog(log, callback) {
-			if (typeof log === 'object' && log.length) {
-				jsenvy.console.log(log.shift());
-				window.setTimeout(function () {
-					loadLog(log, callback);
-				}, 500);
-			} else {
-				if (typeof callback === 'function') callback();
-			}
-		}
-	}
-})(jsenvy);
 (function (jsenvy, window, document) {
 	//keep track of
 	var libraryInput = document.getElementById("libraryName"),
@@ -458,6 +411,8 @@
 		newMethods = document.getElementById("newMethods"),
 		linkLogs = document.getElementById('link-logs'),
 		linkLibs = document.getElementById('link-libraries'),
+		embedCodeModal = document.getElementById('embed-code-modal'),
+		embedCode = document.getElementById('embed-code'),
 		windowCreep = jsenvy.ScopeCreep(window, {
 			properties: ['gaplugins', 'GoogleAnalyticsObject', 'gaGlobal'],
 			methods: ['ga']
@@ -544,6 +499,10 @@
 		}
 	};
 
+	document.getElementById('close-modal').onclick = closeModal;
+
+	document.getElementById('embed-console').onclick = openModal;
+
 	//update urls or links
 	function updateLibraries() {
 		var libs = jsenvy.libraries.loaded().join(',');
@@ -566,7 +525,7 @@
 
 	function loadLibrary(url) {
 		windowCreep.update();
-		jsenvy.libraries.load(url, function(success, message) {
+		jsenvy.libraries.load(url, function (success, message) {
 			if (success) {
 				document.getElementById("libraryName").value = "";
 				document.getElementById("librarySuggestions").innerHTML = "";
@@ -607,5 +566,16 @@
 		}
 
 		if (boom) windowChanges.style.display = "block";
+	}
+
+	function openModal(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		embedCode.innerHTML = '<iframe src="' + location.host + '/console.html' + location.hash + '"></iframe>';
+		embedCodeModal.style.display = 'block';
+	}
+
+	function closeModal() {
+		embedCodeModal.style.display = 'none';
 	}
 })(jsenvy, window, document);

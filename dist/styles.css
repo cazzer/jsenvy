@@ -13,6 +13,11 @@
   #console.mini .console-input {
     width: 100%; }
 
+#console-log {
+  background-image: url('js-envy-25.png');
+  background-repeat: no-repeat;
+  background-position: center; }
+
 textarea {
   max-width: 100%;
   min-width: 100%; }
@@ -49,3 +54,9 @@ ul {
 
 .boring-link {
   color: #737373; }
+
+.panel-button {
+  padding: 0 4px; }
+
+#embed-code {
+  min-height: 120px; }

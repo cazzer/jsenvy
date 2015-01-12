@@ -11,6 +11,8 @@
 		newMethods = document.getElementById("newMethods"),
 		linkLogs = document.getElementById('link-logs'),
 		linkLibs = document.getElementById('link-libraries'),
+		embedCodeModal = document.getElementById('embed-code-modal'),
+		embedCode = document.getElementById('embed-code'),
 		windowCreep = jsenvy.ScopeCreep(window, {
 			properties: ['gaplugins', 'GoogleAnalyticsObject', 'gaGlobal'],
 			methods: ['ga']
@@ -97,6 +99,10 @@
 		}
 	};
 
+	document.getElementById('close-modal').onclick = closeModal;
+
+	document.getElementById('embed-console').onclick = openModal;
+
 	//update urls or links
 	function updateLibraries() {
 		var libs = jsenvy.libraries.loaded().join(',');
@@ -119,7 +125,7 @@
 
 	function loadLibrary(url) {
 		windowCreep.update();
-		jsenvy.libraries.load(url, function(success, message) {
+		jsenvy.libraries.load(url, function (success, message) {
 			if (success) {
 				document.getElementById("libraryName").value = "";
 				document.getElementById("librarySuggestions").innerHTML = "";
@@ -160,5 +166,16 @@
 		}
 
 		if (boom) windowChanges.style.display = "block";
+	}
+
+	function openModal(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		embedCode.innerHTML = '<iframe src="' + location.host + '/console.html' + location.hash + '"></iframe>';
+		embedCodeModal.style.display = 'block';
+	}
+
+	function closeModal() {
+		embedCodeModal.style.display = 'none';
 	}
 })(jsenvy, window, document);

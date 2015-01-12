@@ -11,10 +11,12 @@ var gulp = require("gulp"),
 	concat = require("gulp-concat");
 
 var distDir = "dist/",
-	htmlFiles = [
-		"src/*.html",
+	images = [
 		"src/favicon.ico",
 		"src/*.png"
+	],
+	htmlFiles = [
+		"src/*.html"
 	],
 	indexJsFiles = [
 		"src/jsenvy.module.js",
@@ -24,8 +26,7 @@ var distDir = "dist/",
 		"src/console.js",
 		"src/persist.js",
 		"src/load-from-persist.js",
-		"src/jsenvy.js",
-		"!src/ga.js"
+		"src/jsenvy.js"
 	],
 	consoleJsFiles = [
 		"src/jsenvy.module.js",
@@ -54,7 +55,7 @@ gulp.task("watch", ["build"], function () {
 	gulp.watch(sassFiles, ["build"]);
 });
 
-gulp.task("build", ["fonts"], function () {
+gulp.task("build", ["fonts", "images"], function () {
 	es
 		.merge(views(), logic(), styles(), vendor())
 		.pipe(gulpif(isProd, selectors.run({
@@ -79,6 +80,12 @@ gulp.task("fonts", function () {
 		.pipe(newer(distDir + "fonts"))
 		.pipe(gulp.dest(distDir + "fonts"));
 });
+gulp.task("images", function () {
+	return gulp.src(images)
+		.pipe(newer(distDir))
+		.pipe(gulp.dest(distDir));
+});
+
 
 gulp.task("serve", ["watch"], function () {
 	connect.server({
