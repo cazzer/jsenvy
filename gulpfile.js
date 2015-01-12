@@ -13,7 +13,8 @@ var gulp = require("gulp"),
 var distDir = "dist/",
 	htmlFiles = [
 		"src/*.html",
-		"src/favicon.ico"
+		"src/favicon.ico",
+		"src/*.png"
 	],
 	indexJsFiles = [
 		"src/jsenvy.module.js",
