@@ -229,7 +229,7 @@
 
 	function s(i) {
 		I.update(), e.libraries.load(i, function (i, n) {
-			i ? (t.getElementById("libraryName").value = "", t.getElementById("librarySuggestions").innerHTML = "", e.hideables.hide(m), e.hideables.hide(h), l(), o()) : alert(n)
+			i ? (t.getElementById("libraryName").value = "", t.getElementById("librarySuggestions").innerHTML = "", e.hideables.hide(h), e.hideables.hide(m), l(), o()) : alert(n)
 		})
 	}
 
@@ -253,21 +253,21 @@
 	}
 
 	function a(e) {
-		e.preventDefault(), e.stopPropagation(), B.innerHTML = '<iframe src="' + location.host + "/console.html" + location.hash + '"></iframe>', k.style.display = "block"
+		e.preventDefault(), e.stopPropagation(), B.innerHTML = '<iframe src="' + location.origin + "/console.html" + location.hash + '"></iframe>', k.style.display = "block"
 	}
 
 	function d() {
 		k.style.display = "none"
 	}
 
-	var c = t.getElementById("libraryName"), g = t.getElementById("libraryForm"), p = t.getElementById("librarySuggestions"), h = t.getElementById("suggestions-error"), m = t.getElementById("suggestions-help"), b = t.getElementById("loadedLibraries"), f = t.getElementById("windowChanges"), u = t.getElementById("newProperties"), y = t.getElementById("newMethods"), v = t.getElementById("link-logs"), E = t.getElementById("link-libraries"), k = t.getElementById("embed-code-modal"), B = t.getElementById("embed-code"), I = e.ScopeCreep(i, {properties: ["gaplugins", "GoogleAnalyticsObject", "gaGlobal"], methods: ["ga"]}), L = !0, w = !0;
+	var c = t.getElementById("libraryName"), g = t.getElementById("libraryForm"), p = t.getElementById("librarySuggestions"), m = t.getElementById("suggestions-error"), h = t.getElementById("suggestions-help"), b = t.getElementById("loadedLibraries"), f = t.getElementById("windowChanges"), u = t.getElementById("newProperties"), y = t.getElementById("newMethods"), v = t.getElementById("link-logs"), E = t.getElementById("link-libraries"), k = t.getElementById("embed-code-modal"), B = t.getElementById("embed-code"), I = e.ScopeCreep(i, {properties: ["gaplugins", "GoogleAnalyticsObject", "gaGlobal"], methods: ["ga"]}), L = !0, w = !0;
 	e.libraries.preload(), e.libraries.callback(r), g.onsubmit = function (e) {
 		e.preventDefault(), p.firstChild.click()
 	}, c.onkeyup = function () {
 		if (p.innerHTML = "", !(this.value.length < 1)) {
 			var i = e.libraries.search(this.value);
-			if (!i.length)return e.hideables.show(h), void e.hideables.hide(m);
-			e.hideables.show(m), e.hideables.hide(h);
+			if (!i.length)return e.hideables.show(m), void e.hideables.hide(h);
+			e.hideables.show(h), e.hideables.hide(m);
 			for (var l = 0; l < i.length; l++) {
 				var n = t.createElement("li");
 				n.onclick = function () {

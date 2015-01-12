@@ -171,7 +171,7 @@
 	function openModal(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		embedCode.innerHTML = '<iframe src="' + location.host + '/console.html' + location.hash + '"></iframe>';
+		embedCode.innerHTML = '<iframe src="' + location.origin + '/console.html' + location.hash + '"></iframe>';
 		embedCodeModal.style.display = 'block';
 	}
 
