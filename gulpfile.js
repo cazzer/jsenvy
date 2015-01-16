@@ -8,7 +8,8 @@ var gulp = require("gulp"),
 	selectors = require("gulp-selectors"),
 	minifyCss = require("gulp-minify-css"),
 	es = require("event-stream"),
-	concat = require("gulp-concat");
+	concat = require("gulp-concat"),
+	minifyHtml = require("gulp-minify-html");
 
 var distDir = "dist/",
 	images = [
@@ -58,13 +59,13 @@ gulp.task("watch", ["build"], function () {
 gulp.task("build", ["fonts", "images"], function () {
 	es
 		.merge(views(), logic(), styles(), vendor())
-		.pipe(gulpif(isProd, selectors.run({
+		/*.pipe(gulpif(isProd, selectors.run({
 			css: ["scss", "css"],
 			html: ["html"]
 		}, {
 			classes: ["hidden", "hideable", "boring-link"],
 			ids: true
-		})))
+		})))*/
 		.pipe(gulp.dest(distDir));
 });
 
@@ -95,25 +96,26 @@ gulp.task("serve", ["watch"], function () {
 });
 
 function views() {
-	return gulp.src(htmlFiles);
+	return gulp.src(htmlFiles)
+		.pipe(gulpif(isProd, minifyHtml()));
 }
 
 function logic() {
 	return es.merge(
 		gulp.src(indexJsFiles)
-			.pipe(gulpif(isProd, uglify()))
-			.pipe(concat("app.js")),
+			.pipe(concat("app.js"))
+			.pipe(gulpif(isProd, uglify())),
 		gulp.src(consoleJsFiles)
-			.pipe(gulpif(isProd, uglify()))
 			.pipe(concat("app.min.js"))
+			.pipe(gulpif(isProd, uglify()))
 	);
 }
 
 function styles() {
 	return gulp.src(sassFiles)
 		.pipe(sass())
-		.pipe(gulpif(isProd, minifyCss()))
-		.pipe(concat("styles.css"));
+		.pipe(concat("styles.css"))
+		.pipe(gulpif(isProd, minifyCss()));
 }
 
 function vendor() {
