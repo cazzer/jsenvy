@@ -4,8 +4,6 @@
 		history: history,
 		callback: callback
 	};
-	//keep track of this guy!
-	var _console = window.console;
 	//elements
 	var consoleLog = document.getElementById('console-log'),
 		consoleForm = document.getElementById('console-form'),
@@ -55,7 +53,7 @@
 		consoleInput.value = '';
 		//here is the magic
 		try {
-			var value = eval(expression),
+			var value = window.eval(expression),
 				entry = templates.log.cloneNode();
 
 			entry.title = expression;
