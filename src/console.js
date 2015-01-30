@@ -32,6 +32,7 @@
 				consoleHistory(+1);
 				break;
 			default:
+	//			showTypeAhead();
 				break;
 		}
 	};
@@ -44,6 +45,24 @@
 		callbacks.forEach(function (fn) {
 			fn();
 		});
+	}
+
+	function showTypeAhead() {
+		var currentValue = consoleInput.value,
+			currentScope = window,
+			property;
+
+		//find property
+		for (var key in currentScope) {
+			if (key.indexOf(currentValue) === 0) {
+				property = key;
+				break;
+			}
+		}
+
+		//append difference to input
+		var wordDifference = property.replace(currentValue, '');
+	//	consoleInput.value = currentValue + wordDifference;
 	}
 
 	function log(value) {
