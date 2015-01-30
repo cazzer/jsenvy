@@ -66,28 +66,41 @@
 	}
 
 	function log(value) {
-		var expression = value || consoleInput.value;
+		var expression = value || consoleInput.value,
+			error = false,
+			entry;
+
 		if (expression === '') return;
 
-		consoleInput.value = '';
-
-		//here is the magic
+		//evaluate the statement
 		try {
-			var value = window.eval(expression),
-				entry = templates.log.cloneNode();
-
-			entry.innerHTML = value;
+			value = window.eval(expression);
+			entry = templates.log.cloneNode();
 		} catch (error) {
-			var entry = templates.error.cloneNode();
+			entry = templates.error.cloneNode();
+			error = true;
+		}
 
+		//build the log entry
+		entry.title = expression;
+		if (!error) {
+			switch (typeof value) {
+				case "object":
+					entry.innerHTML = JSON.stringify(value);
+					break;
+				default:
+					entry.innerHTML = value;
+					break;
+			}
+		} else {
 			entry.innerHTML = error.message;
 		}
-		entry.title = expression;
 		consoleLog.appendChild(entry);
 
-		//keep the console at the bottom
+		//do the dishes
 		consoleLog.scrollTop = consoleLog.scrollHeight;
 		consoleHistoryIndex = consoleLog.childElementCount;
+		consoleInput.value = '';
 
 		runCallbacks();
 	}
