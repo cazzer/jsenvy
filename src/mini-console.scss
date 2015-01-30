@@ -1,0 +1,13 @@
+$console-input-height: 34px;
+
+html,
+body {
+	height: 100%;
+}
+
+#console {
+	&.mini {
+		position: relative;
+		height: calc(100% - #{$console-input-height});
+	}
+}

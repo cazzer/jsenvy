@@ -69,7 +69,7 @@ gulp.task("build", ["fonts", "images"], function () {
 		.pipe(gulp.dest(distDir));
 });
 
-gulp.task("build-prod", function (callback) {
+gulp.task("prod", function (callback) {
 	isProd = true;
 	indexJsFiles.push("src/ga.js");
 	consoleJsFiles.push("src/ga.js");
