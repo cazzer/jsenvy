@@ -70,24 +70,25 @@
 		if (expression === '') return;
 
 		consoleInput.value = '';
+
 		//here is the magic
 		try {
 			var value = window.eval(expression),
 				entry = templates.log.cloneNode();
 
-			entry.title = expression;
 			entry.innerHTML = value;
-			consoleLog.appendChild(entry);
 		} catch (error) {
 			var entry = templates.error.cloneNode();
 
-			entry.title = expression;
 			entry.innerHTML = error.message;
-			consoleLog.appendChild(entry);
 		}
+		entry.title = expression;
+		consoleLog.appendChild(entry);
+
 		//keep the console at the bottom
 		consoleLog.scrollTop = consoleLog.scrollHeight;
 		consoleHistoryIndex = consoleLog.childElementCount;
+
 		runCallbacks();
 	}
 
