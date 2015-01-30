@@ -36,14 +36,13 @@
 				methods = [],
 				thingsToIgnore = ["length", "__CommandLineAPI"];
 
-			var scope = Object.getOwnPropertyNames(victim);
-			for (var i = 0; i < scope.length; i++) {
-				var prop = scope[i];
-				if (thingsToIgnore.indexOf(prop) >= 0) continue;
-				if (typeof window[prop] === "function") {
-					methods.push(prop);
-				} else {
-					properties.push(prop);
+			for(var key in victim) {
+				if (thingsToIgnore.indexOf(key) === -1) {
+					if (typeof victim[key] === 'function') {
+						methods.push(key);
+					} else {
+						properties.push(key);
+					}
 				}
 			}
 
