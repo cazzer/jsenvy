@@ -1,23 +1,12 @@
+$padding: 20px;
+
+body {
+	background-color: #eee;
+}
+
 textarea {
 	max-width: 100%;
 	min-width: 100%;
-}
-
-ul {
-	list-style: none outside none;
-	padding-left: 0;
-
-	li {
-		background-color: #e6e6e6;
-		border-radius: 4px;
-		font-size: 1.2em;
-		margin: 0;
-		margin-bottom: 6px;
-		padding: 8px 20px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 }
 
 #librarySuggestions {
@@ -54,4 +43,36 @@ ul {
 
 #embed-code {
 	min-height: 120px;
+}
+
+.lead {
+	margin-top: 20px;
+}
+
+.main-body {
+	background-color: #fff;
+	width: 100%;
+	padding-bottom: 20px;
+
+	ul {
+		list-style: none outside none;
+		padding-left: 0;
+
+		li {
+			background-color: #e6e6e6;
+			border-radius: 4px;
+			font-size: 1.2em;
+			margin: 0 0 6px;
+			padding: 8px 20px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+}
+
+.legend {
+	ul {
+		list-style: none outside none;
+	}
 }
