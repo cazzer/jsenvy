@@ -103,6 +103,8 @@
 
 	document.getElementById('embed-console').onclick = openModal;
 
+	document.getElementById('clear-console').onclick = clearConsole;
+
 	//update urls or links
 	function updateLibraries() {
 		var libs = jsenvy.libraries.loaded().join(',');
@@ -177,5 +179,10 @@
 
 	function closeModal() {
 		embedCodeModal.style.display = 'none';
+	}
+
+	function clearConsole(e) {
+		e.stopPropagation();
+		jsenvy.console.clear();
 	}
 })(jsenvy, window, document);

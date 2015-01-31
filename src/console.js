@@ -2,7 +2,8 @@
 	jsenvy.console = {
 		log: log,
 		history: history,
-		callback: callback
+		callback: callback,
+		clear: clear
 	};
 	//elements
 	var consoleLog = document.getElementById('console-log'),
@@ -126,6 +127,10 @@
 		}
 
 		return statements;
+	}
+
+	function clear() {
+		consoleLog.innerHTML = '';
 	}
 
 	//process templates
