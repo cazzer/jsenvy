@@ -32,13 +32,12 @@
 				<div class="panel-heading">
 					<form id="libraryForm" role="form">
 						<div class="form-group">
-							<label for="libraryName" class="control-label">Library Name:</label>
-							<input type="text" id="libraryName" class="form-control" autocomplete="off">
+							<input type="text" id="libraryName" class="form-control" placeholder="library name or path" autocomplete="off">
 						</div>
 						<p class="help-block">
 							Search for a library, powered by <a target="_blank" href="http://cdnjs.com/">cdnjs</a>,
-							or enter the <strong>full path</strong> to a library and click <a href="#" id="loadFromUrl"
-																							  role="button">here</a>.
+							or enter the <strong title="use the absolute URL of a library not found in the search">full path</strong> to a library and <a href="#" id="loadFromUrl"
+																							  role="button" title="load library from path">click here</a>.
 						</p>
 					</form>
 				</div>
@@ -60,7 +59,7 @@
 					Loaded Libraries
 					<a title="Persist these libraries to the URL"
 					   id="link-libraries"
-					   class="pull-right panel-button">
+					   class="pull-right panel-button boring-link">
 						<span class="float-right glyphicon glyphicon-link"></span>
 					</a>
 				</div>
@@ -102,7 +101,7 @@
 					Console
 					<a title="Persist these logs to the URL"
 					   id="link-logs"
-					   class="pull-right panel-button">
+					   class="pull-right panel-button boring-link">
 						<span class="float-right glyphicon glyphicon-link"></span>
 					</a>
 					<a title="Embed this console on your website."
