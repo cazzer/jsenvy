@@ -18,8 +18,8 @@
 			methods: ['ga']
 		});
 
-	var logsLinked = true,
-		libsLinked = true;
+	var logsLinked = false,
+		libsLinked = false;
 
 	jsenvy.libraries.preload();
 
